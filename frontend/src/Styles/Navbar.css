@@ -1,0 +1,63 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #333;
+    padding: 20px 40px;
+    font-size: 20px;
+  }
+
+  .navbar-logo {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .navbar-logo img {
+    height: 60px; 
+  }
+  .navbar-logo h2{
+    color: white;
+    margin-top: 10px;
+  }
+  
+  .navbar-links {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .navbar-links li {
+    display: inline;
+    margin-right: 20px;
+  }
+  
+  .navbar-links li:last-child {
+    margin-right: 0;
+  }
+  
+  .navbar-links a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .navbar-links a:hover {
+    color: #ccc;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    color: white;
+  }
+  
+  .user-info img {
+    height: 40px; /* Adjust to your desired size */
+    width: auto;  /* Maintain the aspect ratio */
+    border-radius: 50%; /* Optional: Makes the image round */
+  }
+  
+  .user-info p {
+    margin-left: 10px; /* Add some spacing between the image and text */
+    color: #fff;
+  }
+  
