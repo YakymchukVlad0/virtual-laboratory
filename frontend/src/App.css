@@ -1,0 +1,7 @@
+/* In a global CSS file (e.g., index.css) */
+:root {
+  --color-gray-500: #f0f0f0;
+  --color-gray-900: #333333;
+  --color-primary-600: #007bff; /* Example primary color */
+}
+
