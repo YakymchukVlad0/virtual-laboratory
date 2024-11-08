@@ -1,16 +1,16 @@
-import classes from '../Styles/EventsNavigation.module.css';
+import '../Styles/EventsNavigation.css';
 import { NavLink } from 'react-router-dom';
 
 function EventsNavigation() {
   return (
-    <header className={classes.header}>
+    <header className="header">
       <nav>
-        <ul className={classes.list}>
+        <ul className="list">
           <li>
             <NavLink
               to="stats"
               className={({ isActive }) =>
-                isActive ? `${classes.active} ${classes.list}` : classes.list
+                isActive ? `active list` : "list"
               }
               end
             >
@@ -21,7 +21,7 @@ function EventsNavigation() {
             <NavLink
               to="analytics"
               className={({ isActive }) =>
-                isActive ? `${classes.active} ${classes.list}` : classes.list
+                isActive ? `active list` : "list"
               }
             >
               Analytics
