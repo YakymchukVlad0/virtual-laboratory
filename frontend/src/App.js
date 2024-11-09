@@ -7,6 +7,9 @@ import HomePage from './Pages/HomePage';
 import StatisticsPage from './Pages/StatisticsPage';
 import EventsLayout from './Pages/EventsLayout';
 import PageContent from './Components/PageContent';
+import ActivityPage from './Pages/ActivityPage';
+import AnalyticsPage from './Pages/AnalyticsPage';
+import LeadersPage from './Pages/LeadersPage';
 
 function App() {
   const router = createBrowserRouter([
@@ -26,8 +29,16 @@ function App() {
               
             },
             {
+              path: 'my_activity',
+              element: <ActivityPage/>
+            },
+            {
+              path: 'leaderboard',
+              element: <LeadersPage/>
+            },
+            {
               path: 'analytics',
-              element: <PageContent title="SomePage"/>
+              element: <AnalyticsPage/>
             },
           ],
         },
