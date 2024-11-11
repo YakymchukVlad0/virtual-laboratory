@@ -1,19 +1,54 @@
-.search-bar-container {
-    padding-top: 2vh;
-    width: 40%;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 200px;
-}
+/* Statistics.css */
 
 .parameters {
     padding-top: 3vh;
-    width: 40%;
+    width: 60%;
     margin: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 200px;
+    min-width: 300px;
+}
+
+/* Grouping filter and radio options */
+.filter-container {
+    display: flex;
+    gap: 1em;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+/* Dropdown and button styles */
+.dropdown-container {
+    display: flex;
+    justify-content: center;
+    width: auto;
+}
+
+.dropdown-container .btn-group .btn,
+.dropdown-container .btn-group .dropdown-toggle {
+    width: 100%;
+}
+
+.radio-options {
+    display: flex;
+    gap: 1em;
+}
+
+.search-bar-container {
+    padding-top: 2vh;
+    width: 80%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 250px;
+}
+
+.content-container {
+    width: 80%;
+    margin: auto;
+    padding-top: 2vh;
 }

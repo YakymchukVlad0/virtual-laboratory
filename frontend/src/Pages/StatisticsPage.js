@@ -11,7 +11,7 @@ import TableFormat from "../Components/TableFormat";
 import DiagramFormat from "../Components/DiagramFormat";
 
 const StatisticsPage = () => {
-  const tasks = data;
+  const [tasks, setTasks] = useState(data);
   const [selectedTasks, setSelectedTasks] = useState([]);
   const [checkboxValues, setCheckboxValues] = useState({
     positive: false,
@@ -27,6 +27,7 @@ const StatisticsPage = () => {
       ...prev,
       [id]: checked
     }));
+    setTasks(data);
   };
 
   const handleRadioChange = (event) => {
@@ -37,85 +38,77 @@ const StatisticsPage = () => {
     setIsTableFormat(event.target.checked);
   };
 
-  console.log("Tasks:", tasks);
-  console.log("Selected Tasks:", selectedTasks);
-  console.log("Checkbox Values:", checkboxValues);
-  console.log("Selected Radio:", selectedRadio);
-  console.log("Table Format:", isTableFormat);
-
   return (
     <>
       <h1>My Statistics</h1>
       <div className="parameters">
         <Form>
-          <Dropdown as={ButtonGroup}>
-            <Button variant="success">Split Button</Button>
+          {/* Dropdown and filter options grouped together */}
+          <div className="filter-container">
+            <Dropdown as={ButtonGroup} className="dropdown-container">
+              <Button variant="success">Filter Options</Button>
+              <Dropdown.Toggle split variant="success" id="dropdown-split-basic" />
 
-            <Dropdown.Toggle
-              split
-              variant="success"
-              id="dropdown-split-basic"
-            />
+              <Dropdown.Menu>
+                <Form.Check
+                  inline
+                  label="Only positive"
+                  type="checkbox"
+                  id="positive"
+                  checked={checkboxValues.positive}
+                  onChange={handleCheckboxChange}
+                />
+                <Form.Check
+                  inline
+                  label="Only negative"
+                  type="checkbox"
+                  id="negative"
+                  checked={checkboxValues.negative}
+                  onChange={handleCheckboxChange}
+                />
+                <Form.Check
+                  inline
+                  label="Only fully completed"
+                  type="checkbox"
+                  id="fullyCompleted"
+                  checked={checkboxValues.fullyCompleted}
+                  onChange={handleCheckboxChange}
+                />
+              </Dropdown.Menu>
+            </Dropdown>
 
-            <Dropdown.Menu>
+            <div key="inline-radio" className="radio-options">
               <Form.Check
                 inline
-                label="Only positive"
-                type="checkbox"
-                id="positive"
-                checked={checkboxValues.positive}
-                onChange={handleCheckboxChange}
+                label="Sort option1"
+                name="group2"
+                type="radio"
+                id="inline-radio-1"
+                value="1"
+                checked={selectedRadio === "1"}
+                onChange={handleRadioChange}
               />
               <Form.Check
                 inline
-                label="Only negative"
-                type="checkbox"
-                id="negative"
-                checked={checkboxValues.negative}
-                onChange={handleCheckboxChange}
+                label="Sort option2"
+                name="group2"
+                type="radio"
+                id="inline-radio-2"
+                value="2"
+                checked={selectedRadio === "2"}
+                onChange={handleRadioChange}
               />
               <Form.Check
                 inline
-                label="Only fully completed"
-                type="checkbox"
-                id="fullyCompleted"
-                checked={checkboxValues.fullyCompleted}
-                onChange={handleCheckboxChange}
+                label="Sort option3"
+                name="group2"
+                type="radio"
+                id="inline-radio-3"
+                value="3"
+                checked={selectedRadio === "3"}
+                onChange={handleRadioChange}
               />
-            </Dropdown.Menu>
-          </Dropdown>
-
-          <div key="inline-radio" className="mb-3">
-            <Form.Check
-              inline
-              label="1"
-              name="group2"
-              type="radio"
-              id="inline-radio-1"
-              value="1"
-              checked={selectedRadio === "1"}
-              onChange={handleRadioChange}
-            />
-            <Form.Check
-              inline
-              label="2"
-              name="group2"
-              type="radio"
-              id="inline-radio-2"
-              value="2"
-              checked={selectedRadio === "2"}
-              onChange={handleRadioChange}
-            />
-            <Form.Check
-              inline
-              label="3"
-              name="group2"
-              type="radio"
-              id="inline-radio-3"
-              value="3"
-              checked={selectedRadio === "3"}
-              onChange={handleRadioChange}
-            />
+            </div>
           </div>
 
           <Form.Check
@@ -135,7 +128,7 @@ const StatisticsPage = () => {
         </div>
       </div>
       <div className="content-container">
-        {isTableFormat ? <TableFormat/> : <DiagramFormat/>}
+        {isTableFormat ? <TableFormat dataArray={tasks}/> : <DiagramFormat dataArray={tasks}/>}
       </div>
     </>
   );

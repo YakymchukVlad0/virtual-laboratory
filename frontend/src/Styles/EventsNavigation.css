@@ -1,25 +1,57 @@
+/* Updated EventsNavigation.css */
+
 .header {
-    padding: 2rem;
-    display: flex;
-    justify-content: center;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  background-color: #1a1a1a; /* Dark background */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.list {
+  display: flex;
+  gap: 1rem;
+}
+
+.list a {
+  background-color: #333; /* Darker gray for nav links */
+  color: #f0f0f0; /* Light text color */
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation */
+}
+
+.list a:hover {
+  transform: scale(1.05); /* Slight scaling on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow effect on hover */
+}
+
+.list a:active {
+  transform: scale(0.95); /* Shrink effect when active */
+}
+
+.list a.active {
+  background-color: #007bff; /* Primary color for active link */
+  color: #ffffff; /* Ensures active link stands out */
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4); /* Slight shadow for active */
+  transform: scale(1.1); /* Slightly larger scale for active link */
+}
+
+/* Media Query for Responsive Layout */
+@media (max-width: 600px) {
+  .header {
+      padding: 1rem;
   }
-  
+
   .list {
-    display: flex;
-    gap: 1rem;
+      flex-direction: column;
+      gap: 0.5rem;
   }
-  
+
   .list a {
-    background-color: var(--color-gray-500);
-    color: var(--color-gray-900);
-    padding: 0.5rem 1.5rem;
-    border-radius: 4px;
-    text-decoration: none;
+      padding: 0.5rem 1rem;
+      text-align: center;
+      width: 100%;
   }
-  
-  .list a:hover,
-  .list a:active,
-  .list a.active {
-    background-color: var(--color-primary-600);
-  }
-  
+}

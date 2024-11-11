@@ -29,7 +29,7 @@ function App() {
               
             },
             {
-              path: 'my_activity',
+              index: true,
               element: <ActivityPage/>
             },
             {

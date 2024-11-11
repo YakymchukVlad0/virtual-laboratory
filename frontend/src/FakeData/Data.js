@@ -1,5 +1,6 @@
 export const taskData = [
     {
+        id : 1,
         name: "Task 1",
         totalTasks: 10,
         code: "for (let i = 0; i < 10; i++) { console.log(i); }",
@@ -12,6 +13,7 @@ export const taskData = [
         programmingLanguage: "Python"
     },
     {
+        id : 2,
         name: "Task 2",
         totalTasks: 15,
         code: "public static void main(String[] args) { System.out.println('Hello'); }",
@@ -24,6 +26,7 @@ export const taskData = [
         programmingLanguage: "Java"
     },
     {
+        id : 3,
         name: "Task 3",
         totalTasks: 8,
         code: "<html><body><h1>Hello World</h1></body></html>",
@@ -36,6 +39,7 @@ export const taskData = [
         programmingLanguage: "HTML"
     },
     {
+        id : 4,
         name: "Task 4",
         totalTasks: 12,
         code: "SELECT * FROM students WHERE age > 18;",
@@ -48,6 +52,7 @@ export const taskData = [
         programmingLanguage: "SQL"
     },
     {
+        id : 5,
         name: "Task 5",
         totalTasks: 6,
         code: "function factorial(n) { return n === 0 ? 1 : n * factorial(n - 1); }",
@@ -60,6 +65,7 @@ export const taskData = [
         programmingLanguage: "JavaScript"
     },
     {
+        id : 6,
         name: "Task 6",
         totalTasks: 9,
         code: "const sum = (a, b) => a + b;",
@@ -72,6 +78,7 @@ export const taskData = [
         programmingLanguage: "JavaScript"
     },
     {
+        id : 7,
         name: "Task 7",
         totalTasks: 11,
         code: "System.out.println('Task completed');",
@@ -84,6 +91,7 @@ export const taskData = [
         programmingLanguage: "Java"
     },
     {
+        id : 8,
         name: "Task 8",
         totalTasks: 7,
         code: "#include <iostream> int main() { std::cout << 'Hello'; return 0; }",
@@ -96,6 +104,7 @@ export const taskData = [
         programmingLanguage: "C++"
     },
     {
+        id : 9,
         name: "Task 9",
         totalTasks: 5,
         code: "print('Data analysis complete')",
@@ -108,6 +117,7 @@ export const taskData = [
         programmingLanguage: "Python"
     },
     {
+        id: 10,
         name: "Task 10",
         totalTasks: 14,
         code: "echo 'Hello World';",

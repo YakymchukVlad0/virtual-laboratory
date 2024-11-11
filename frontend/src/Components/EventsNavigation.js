@@ -19,10 +19,11 @@ function EventsNavigation() {
           </li>
           <li>
             <NavLink
-              to="my_activity"
+              to="/module"
               className={({ isActive }) =>
-                isActive ? `${classes.active} ${classes.list}` : classes.list
+                isActive ? `active list` : "list"
               }
+              end
             >
               My activity
             </NavLink>
@@ -31,7 +32,7 @@ function EventsNavigation() {
             <NavLink
               to="leaderboard"
               className={({ isActive }) =>
-                isActive ? `${classes.active} ${classes.list}` : classes.list
+                isActive ? `active list` : "list"
               }
             >
               Leaderboard
