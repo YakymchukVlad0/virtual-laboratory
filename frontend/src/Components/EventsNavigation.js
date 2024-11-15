@@ -6,6 +6,17 @@ function EventsNavigation() {
     <header className="header">
       <nav>
         <ul className="list">
+        <li>
+            <NavLink
+              to="/module"
+              className={({ isActive }) =>
+                isActive ? `active list` : "list"
+              }
+              end
+            >
+              My activity
+            </NavLink>
+          </li>
           <li>
             <NavLink
               to="stats"
@@ -15,17 +26,6 @@ function EventsNavigation() {
               end
             >
               My statistic
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/module"
-              className={({ isActive }) =>
-                isActive ? `active list` : "list"
-              }
-              end
-            >
-              My activity
             </NavLink>
           </li>
           <li>

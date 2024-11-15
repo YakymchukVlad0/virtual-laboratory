@@ -24,13 +24,13 @@ function App() {
           element: <EventsLayout/>,
           children: [
             {
+              index: true,
+              element: <ActivityPage/>
+            },
+            {
               path: 'stats',
               element: <StatisticsPage/>
               
-            },
-            {
-              index: true,
-              element: <ActivityPage/>
             },
             {
               path: 'leaderboard',

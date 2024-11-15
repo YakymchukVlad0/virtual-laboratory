@@ -1,7 +1,14 @@
 .search-result {
-    padding: 10px 20px;
-  }
-  
-  .search-result:hover {
-    background-color: #efefef;
-  }
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #333; /* Set text color to dark */
+  cursor: pointer; /* Indicate it's clickable */
+}
+
+.search-result:hover {
+  background-color: #efefef;
+}
+
+.search-result:active {
+  background-color: #dcdcdc; /* Highlight when clicked */
+}

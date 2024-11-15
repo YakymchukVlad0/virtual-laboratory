@@ -10,7 +10,7 @@
     min-width: 300px;
 }
 
-/* Grouping filter and radio options */
+
 .filter-container {
     display: flex;
     gap: 1em;
@@ -20,7 +20,7 @@
     margin-bottom: 1em;
 }
 
-/* Dropdown and button styles */
+
 .dropdown-container {
     display: flex;
     justify-content: center;
@@ -51,4 +51,11 @@
     width: 80%;
     margin: auto;
     padding-top: 2vh;
+}
+
+.formatSwitch{
+    margin-top: 50px;
+    display: flex;
+    align-items: center;
+
 }

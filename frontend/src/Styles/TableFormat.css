@@ -1,0 +1,38 @@
+/* Dark theme for the entire Paper container */
+.dark-theme-table {
+    background-color: #1a1a1a; /* Outer container dark background */
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    color: #dddddd;
+}
+
+/* Override default table header styles */
+.MuiDataGrid-columnHeaders {
+    background-color: #333333 !important;
+    color: #ffcc00 !important;
+    font-weight: bold !important;
+    font-size: 1rem;
+    border-bottom: 2px solid #444;
+}
+
+/* Cell styling */
+.MuiDataGrid-cell {
+    color: #dddddd !important;
+}
+
+/* Footer styling */
+.MuiDataGrid-footerContainer {
+    background-color: #2a2a2a !important;
+    color: #ffcc00 !important;
+}
+
+/* Styling for the rows to match dark theme */
+.MuiDataGrid-row {
+    background-color: #1a1a1a;
+}
+
+/* Border color for the checkbox */
+.MuiCheckbox-root {
+    color: #ffcc00 !important;
+}

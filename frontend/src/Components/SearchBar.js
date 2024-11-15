@@ -12,7 +12,7 @@ export const SearchBar = ({ setResults }) => {
             value &&
             task &&
             task.name &&
-            task.name.toLowerCase().includes(value)
+            task.name.includes(value)
         );
     });
     setResults(results);

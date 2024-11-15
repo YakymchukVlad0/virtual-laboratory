@@ -1,0 +1,23 @@
+/* Dark background for the entire page */
+body {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+}
+
+.cards-info {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.cards-info h1 {
+    font-size: 2rem;
+    color: #ffcc00;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

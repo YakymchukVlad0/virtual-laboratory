@@ -11,6 +11,13 @@
 .list {
   display: flex;
   gap: 1rem;
+  list-style-type: none; /* Removes the bullet points */
+  padding: 0; /* Removes default padding from the list */
+  margin: 0; /* Removes default margin from the list */
+}
+
+.list li {
+  margin: 0; /* Ensure list items don't add any extra margin */
 }
 
 .list a {

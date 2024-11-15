@@ -1,5 +1,8 @@
 import Cards from "../Components/Cards";
 import Slider from "../Components/Slider";
+import "../Styles/HomePage.css";
+import "../Styles/Slider.css";
+
 
 const HomePage = () => {
     return ( 

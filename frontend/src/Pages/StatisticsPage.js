@@ -28,10 +28,12 @@ const StatisticsPage = () => {
       [id]: checked
     }));
     setTasks(data);
+    console.log(checkboxValues);
   };
 
   const handleRadioChange = (event) => {
     setSelectedRadio(event.target.value);
+    console.log(selectedRadio);
   };
 
   const handleSwitchChange = (event) => {
@@ -112,6 +114,7 @@ const StatisticsPage = () => {
           </div>
 
           <Form.Check
+            className="formatSwitch"
             type="switch"
             id="custom-switch"
             label="Table format"

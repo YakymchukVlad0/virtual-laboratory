@@ -1,0 +1,29 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  max-width: 600px;
+  padding: 2rem;
+  background-color: #f8d7da; /* Light red background for error */
+  color: #721c24; /* Dark red for text color */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* Title styling */
+.content h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #721c24;
+}
+
+/* Message paragraph styling */
+.content p {
+  font-size: 1.1rem;
+  color: #5c3e42; /* Slightly darker shade for the message */
+  line-height: 1.5;
+  margin-bottom: 0;
+}

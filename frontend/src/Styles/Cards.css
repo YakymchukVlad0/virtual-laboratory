@@ -1,0 +1,74 @@
+/* Container for spacing */
+.container {
+    padding: 2rem 0;
+}
+
+/* Card styling */
+.card {
+    background-color: #333333; /* Dark background for the cards */
+    color: #ffffff; /* White text */
+    border: 1px solid #444; /* Border for contrast */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Card hover effect */
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 0px 15px 5px rgba(255, 204, 0, 0.5);
+    background-color: #444444; /* Slightly lighter dark background on hover */
+}
+
+/* Card header styling */
+.card-header {
+    background-color: #2a2a2a; /* Darker background for the header */
+    color: #ffcc00; /* Yellow accent color for text */
+    font-size: 1.2rem;
+    text-align: center;
+    padding: 1rem;
+    border-bottom: 1px solid #444;
+}
+
+/* Text and Body */
+.card-text {
+    font-size: 1rem;
+    padding: 1rem;
+    color: #dddddd; /* Light gray for readability */
+    transition: color 0.3s ease; /* Add transition for text color change */
+}
+
+/* Change text color on image hover */
+.card:hover .card-text {
+    color: #ffffff; /* Bright white text when hovering over card */
+}
+
+/* Image styling */
+.card-img-top {
+    width: 100%;
+    height: auto;
+    filter: grayscale(50%); /* Subtle grayscale effect */
+    transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+/* Image hover effect */
+.card-img-top:hover {
+    filter: grayscale(0%); /* Image becomes colorful */
+    transform: scale(1.02); /* Slight zoom-in effect */
+}
+
+/* Column styling for responsive spacing */
+.col {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+    .card {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+}
