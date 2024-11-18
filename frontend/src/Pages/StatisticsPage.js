@@ -1,7 +1,7 @@
-import Form from "react-bootstrap/Form";
+
+import {Button,Form} from "react-bootstrap";
 import { taskData as data } from "../FakeData/Data";
 import { useState } from "react";
-import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import { SearchBar } from "../Components/SearchBar";

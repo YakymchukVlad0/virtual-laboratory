@@ -24,6 +24,7 @@ export default function TableFormat({ dataArray }) {
   return (
     <Paper className="dark-theme-table" sx={{ height: 400, width: '100%' }}>
       <DataGrid
+        data-testid = "dataTable"
         rows={rows}
         columns={columns}
         initialState={{ pagination: { paginationModel } }}
