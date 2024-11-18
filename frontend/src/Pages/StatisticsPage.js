@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import {Button,Form} from "react-bootstrap";
 import { taskData as data } from "../FakeData/Data";
@@ -10,6 +11,9 @@ import "../Styles/Statistics.css";
 import TableFormat from "../Components/TableFormat";
 import DiagramFormat from "../Components/DiagramFormat";
 
+=======
+import React from "react";
+>>>>>>> c2f81cf2fba6fa797ea8c6254bc466ea0dbe312b
 const StatisticsPage = () => {
   const [tasks, setTasks] = useState(data);
   const [selectedTasks, setSelectedTasks] = useState([]);

@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import { taskData } from "../FakeData/Data";
 import "../Styles/Analytics.css"
+=======
+import React from "react";
+>>>>>>> c2f81cf2fba6fa797ea8c6254bc466ea0dbe312b
 
 const AnalyticsPage = () => {
     const generateAnalysis = (code, programmingLanguage) => {

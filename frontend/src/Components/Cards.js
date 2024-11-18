@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React from 'react';
+=======
+import React from "react";
+>>>>>>> c2f81cf2fba6fa797ea8c6254bc466ea0dbe312b
 import { Card, CardImg, Col, Row, Container, CardBody, CardText, CardHeader } from "react-bootstrap";
 import student from '../Images/student.png';
 import teacher from '../Images/teacher.png';
