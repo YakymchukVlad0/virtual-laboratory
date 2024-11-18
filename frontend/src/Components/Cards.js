@@ -1,3 +1,4 @@
+import React from "react";
 import { Card, CardImg, Col, Row, Container, CardBody, CardText, CardHeader } from "react-bootstrap";
 import student from '../Images/student.png'
 import teacher from '../Images/teacher.png'

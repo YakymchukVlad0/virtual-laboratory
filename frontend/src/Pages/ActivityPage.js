@@ -1,3 +1,4 @@
+import React from "react";
 import DateFilter from "../Components/DateFilter";
 
 const ActivityPage = () => {
