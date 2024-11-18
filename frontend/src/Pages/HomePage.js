@@ -1,3 +1,4 @@
+import React from "react";
 import Cards from "../Components/Cards";
 import Slider from "../Components/Slider";
 
