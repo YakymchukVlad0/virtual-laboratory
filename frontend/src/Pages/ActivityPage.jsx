@@ -1,5 +1,5 @@
 import React from "react";
-import DateFilter from "../Components/DateFilter";
+import DateFilter from "../Components/DateFilter.jsx";
 
 const ActivityPage = () => {
     return ( <>

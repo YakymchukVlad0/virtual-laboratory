@@ -1,6 +1,6 @@
 import React from "react";
-import Cards from "../Components/Cards";
-import Slider from "../Components/Slider";
+import Cards from "../Components/Cards.jsx";
+import Slider from "../Components/Slider.jsx";
 import "../Styles/HomePage.css";
 import "../Styles/Slider.css";
 

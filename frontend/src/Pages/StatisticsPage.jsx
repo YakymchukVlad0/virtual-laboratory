@@ -4,11 +4,11 @@ import { taskData as data } from "../FakeData/Data";
 import { useState } from "react";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Dropdown from "react-bootstrap/Dropdown";
-import { SearchBar } from "../Components/SearchBar";
-import { SearchResultsList } from "../Components/SearchResultList";
+import { SearchBar } from "../Components/SearchBar.jsx";
+import { SearchResultsList } from "../Components/SearchResultList.jsx";
 import "../Styles/Statistics.css";
-import TableFormat from "../Components/TableFormat";
-import DiagramFormat from "../Components/DiagramFormat";
+import TableFormat from "../Components/TableFormat.jsx";
+import DiagramFormat from "../Components/DiagramFormat.jsx";
 
 const StatisticsPage = () => {
   const [tasks, setTasks] = useState(data);
