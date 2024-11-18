@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 import '../Styles/EventsNavigation.css';
-=======
-import React from "react";
-import classes from '../Styles/EventsNavigation.module.css';
->>>>>>> c2f81cf2fba6fa797ea8c6254bc466ea0dbe312b
 import { NavLink } from 'react-router-dom';
 
 function EventsNavigation() {
