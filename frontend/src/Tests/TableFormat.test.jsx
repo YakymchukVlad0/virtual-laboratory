@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import TableFormat from "../Components/TableFormat";
+import TableFormat from "../Components/TableFormat.jsx";
 import { taskData } from "../FakeData/Data";
 
 describe("TableFormat Component", () => {

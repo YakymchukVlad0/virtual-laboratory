@@ -2,13 +2,11 @@ import uvicorn
 
 from fastapi import FastAPI
 
+from app.routers.router import router
+
 app = FastAPI()
 
-
-@app.get("/")
-def test_func():
-    response = {"message": "Hello World"}
-    return response
+app.include_router(router)
 
 
 if __name__ == "__main__":

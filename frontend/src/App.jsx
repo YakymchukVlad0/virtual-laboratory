@@ -1,15 +1,15 @@
 import React from "react";
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import ErrorPage from './Pages/Error';
-import Navbar from './Components/Navbar';
+import ErrorPage from './Pages/Error.jsx';
+import Navbar from './Components/Navbar.jsx';
 import './App.css';
-import HomePage from './Pages/HomePage';
-import StatisticsPage from './Pages/StatisticsPage';
-import EventsLayout from './Pages/EventsLayout';
-import PageContent from './Components/PageContent';
-import ActivityPage from './Pages/ActivityPage';
-import AnalyticsPage from './Pages/AnalyticsPage';
-import LeadersPage from './Pages/LeadersPage';
+import HomePage from './Pages/HomePage.jsx';
+import StatisticsPage from './Pages/StatisticsPage.jsx';
+import EventsLayout from './Pages/EventsLayout.jsx';
+import PageContent from './Components/PageContent.jsx';
+import ActivityPage from './Pages/ActivityPage.jsx';
+import AnalyticsPage from './Pages/AnalyticsPage.jsx';
+import LeadersPage from './Pages/LeadersPage.jsx';
 
 function App() {
   const router = createBrowserRouter([
