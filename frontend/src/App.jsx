@@ -10,6 +10,7 @@ import PageContent from './Components/PageContent.jsx';
 import ActivityPage from './Pages/ActivityPage.jsx';
 import AnalyticsPage from './Pages/AnalyticsPage.jsx';
 import LeadersPage from './Pages/LeadersPage.jsx';
+import ProfilePage from "./Pages/ProfilePage.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -45,6 +46,11 @@ function App() {
         {
           path: '/m2',
           element: <PageContent title="Development" />
+          
+        },
+        {
+          path: '/profile',
+          element: <ProfilePage/>
           
         },
       ],

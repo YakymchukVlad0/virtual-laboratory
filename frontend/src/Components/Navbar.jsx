@@ -27,13 +27,15 @@ const Navbar = () => {
             <NavLink to="/testing">Testing</NavLink>
           </li>
           <li>
-            <NavLink to="/export">Export</NavLink>
+            <NavLink to="/export">Designing</NavLink>
           </li>
         </ul>
+        <NavLink to="/profile">
         <div className="user-info">
             <img src={userLogo} alt="user"></img>
             <p>Student username</p>
         </div>
+        </NavLink>
         
       </nav>
       <Outlet/>

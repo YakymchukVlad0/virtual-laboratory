@@ -10,22 +10,30 @@
     min-width: 300px;
 }
 
-
 .filter-container {
     display: flex;
     gap: 1em;
-    justify-content: center;
+    justify-content: space-around; /* Ensures even spacing */
     align-items: center;
-    width: 100%;
+    width: 100%; 
     margin-bottom: 1em;
+    position: relative; /* Ensures dropdown is positioned relative to this container */
 }
-
 
 .dropdown-container {
+    position: relative; /* Keep dropdown positioning relative to the parent */
     display: flex;
     justify-content: center;
-    width: auto;
+    align-items: center;
 }
+
+.dropdown-container .dropdown-menu {
+    position: absolute; /* Forces dropdown to appear directly below the button */
+    top: 100%; /* Align dropdown below the toggle button */
+    left: 0; /* Adjust alignment if necessary */
+    z-index: 1050; /* Ensure it appears above other elements */
+}
+
 
 .dropdown-container .btn-group .btn,
 .dropdown-container .btn-group .dropdown-toggle {
@@ -55,7 +63,4 @@
 
 .formatSwitch{
     margin-top: 50px;
-    display: flex;
-    align-items: center;
-
 }
