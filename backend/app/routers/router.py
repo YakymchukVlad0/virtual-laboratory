@@ -7,52 +7,46 @@ from pymongo.server_api import ServerApi
 
 router = APIRouter()
 
-load_dotenv()
+load_dotenv(".env.sample")
 
-uri = os.getenv("MONGO_URI")
+uri = os.getenv("MONGO_DB_PATH")
 client = MongoClient(uri)
 
 db = client["SAC"]
 students_collection = db["students"]
-courses_collection = db["courses"]
 
 
-def get_course_id(course_name: str):
-    course = courses_collection.find_one({"course_name": course_name})
-    return course["_id"] if course else None
+def get_course_from_student(student_name: str, course_name: str):
+    student = students_collection.find_one({"name": student_name})
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+
+    course = next((course for course in student.get("courses", []) if course["course_name"] == course_name), None)
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found for the student")
+
+    return course
 
 
 @router.get("/student/{student_name}/course/{course_name}/avg")
 def get_student_avg(student_name: str, course_name: str):
-    course_id = get_course_id(course_name)
-    if not course_id:
-        raise HTTPException(status_code=404, detail="Course not found")
-
-    student = students_collection.find_one({"name": student_name, "courses.course_id": course_id})
-    if not student:
-        raise HTTPException(status_code=404, detail="Student not found or not enrolled to the course")
-
-    course = next((course for course in student["courses"] if course["course_id"] == course_id), None)
-    if not course:
-        raise HTTPException(status_code=404, detail="Course not found for the student")
+    course = get_course_from_student(student_name, course_name)
 
     total_grade = 0
-    total_tasks = 0
-    for task in course.get("tasks", []):
-        total_grade += task["submission"]["grade"]
-        total_tasks += 1
+    total_tasks = len(course.get("tasks", []))
 
-    return {"average": total_grade / total_tasks if total_tasks > 0 else 0}
+    for task in course.get("tasks", []):
+        total_grade += task.get("grade", 0)
+
+    average_grade = total_grade / total_tasks if total_tasks > 0 else 0
+
+    return {"average": average_grade}
 
 
 @router.get("/group/course/{course_name}/avg")
 def get_group_avg(course_name: str):
-    course_id = get_course_id(course_name)
-    if not course_id:
-        raise HTTPException(status_code=404, detail="Course not found")
-
-    students = students_collection.find({"courses.course_id": course_id})
-    students = list(students)  # Перетворення курсору в список
+    students = students_collection.find({"courses.course_name": course_name})
+    students = list(students)
 
     if not students:
         raise HTTPException(status_code=404, detail="No students found for this course")
@@ -60,10 +54,10 @@ def get_group_avg(course_name: str):
     total_grade = 0
     total_tasks = 0
     for student in students:
-        for course in student["courses"]:
-            if course["course_id"] == course_id:
+        for course in student.get("courses", []):
+            if course["course_name"] == course_name:
                 for task in course.get("tasks", []):
-                    total_grade += task["submission"]["grade"]
+                    total_grade += task.get("grade", 0)
                     total_tasks += 1
 
     if total_tasks == 0:
@@ -74,21 +68,21 @@ def get_group_avg(course_name: str):
 
 @router.get("/compare/student/{student_name}/course/{course_name}")
 def compare_student_group_avg(student_name: str, course_name: str):
-    course_id = get_course_id(course_name)
-    if not course_id:
-        raise HTTPException(status_code=404, detail="Course not found")
-
-    student = students_collection.find_one({"name": student_name, "courses.course_id": course_id})
+    student = students_collection.find_one({"name": student_name})
     if not student:
-        raise HTTPException(status_code=404, detail="Student not found or not enrolled to the course")
+        raise HTTPException(status_code=404, detail="Student not found")
 
-    course = next((course for course in student["courses"] if course["course_id"] == course_id), None)
+    course = next((course for course in student.get("courses", []) if course["course_name"] == course_name), None)
     if not course:
         raise HTTPException(status_code=404, detail="Course not found for the student")
 
-    student_avg = sum(task["submission"]["grade"] for task in course.get("tasks", [])) / len(course["tasks"])
+    tasks = course.get("tasks", [])
+    if not tasks:
+        raise HTTPException(status_code=404, detail="No tasks found for the student in this course")
 
-    students = students_collection.find({"courses.course_id": course_id})
+    student_avg = sum(task.get("grade", 0) for task in tasks) / len(tasks)
+
+    students = students_collection.find({"courses.course_name": course_name})
     students = list(students)
 
     if not students:
@@ -97,10 +91,10 @@ def compare_student_group_avg(student_name: str, course_name: str):
     total_grade = 0
     total_tasks = 0
     for student in students:
-        for course in student["courses"]:
-            if course["course_id"] == course_id:
+        for course in student.get("courses", []):
+            if course["course_name"] == course_name:
                 for task in course.get("tasks", []):
-                    total_grade += task["submission"]["grade"]
+                    total_grade += task.get("grade", 0)
                     total_tasks += 1
 
     if total_tasks == 0:
@@ -121,33 +115,36 @@ def compare_student_group_avg(student_name: str, course_name: str):
 
 @router.get("/compare/task/student/{student_name}/course/{course_name}/task/{task_name}")
 def compare_task_avg(student_name: str, course_name: str, task_name: str):
-    course_id = get_course_id(course_name)
-    if not course_id:
-        raise HTTPException(status_code=404, detail="Course not found")
-
-    student = students_collection.find_one({"name": student_name, "courses.course_id": course_id})
+    student = students_collection.find_one({"name": student_name})
     if not student:
-        raise HTTPException(status_code=404, detail="Student not found or not enrolled in this course")
+        raise HTTPException(status_code=404, detail="Student not found")
 
-    course = next((course for course in student["courses"] if course["course_id"] == course_id), None)
+    course = next((course for course in student.get("courses", []) if course["course_name"] == course_name), None)
     if not course:
         raise HTTPException(status_code=404, detail="Course not found for the student")
 
     task = next((task for task in course.get("tasks", []) if task["task_name"] == task_name), None)
     if not task:
-        raise HTTPException(status_code=404, detail="Task not found")
+        raise HTTPException(status_code=404, detail="Task not found for the student")
 
-    student_task_grade = task["submission"]["grade"]
+    student_task_grade = task.get("grade", 0)
+
+    students = students_collection.find({"courses.course_name": course_name})
+    students = list(students)
+
+    if not students:
+        raise HTTPException(status_code=404, detail="No students found for this course")
+
     total_grade = 0
     total_students = 0
 
-    for student in students_collection.find({"courses.course_id": course_id}):
-        course = next((course for course in student["courses"] if course["course_id"] == course_id), None)
-        if course:
-            task = next((task for task in course.get("tasks", []) if task["task_name"] == task_name), None)
-            if task:
-                total_grade += task["submission"]["grade"]
-                total_students += 1
+    for student in students:
+        for course in student.get("courses", []):
+            if course["course_name"] == course_name:
+                task = next((task for task in course.get("tasks", []) if task["task_name"] == task_name), None)
+                if task:
+                    total_grade += task.get("grade", 0)
+                    total_students += 1
 
     group_task_avg = total_grade / total_students if total_students > 0 else 0
     difference = (student_task_grade - group_task_avg) / group_task_avg * 100 if group_task_avg else 0
