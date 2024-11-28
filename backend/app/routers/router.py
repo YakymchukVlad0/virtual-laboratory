@@ -154,3 +154,28 @@ def compare_task_avg(student_name: str, course_name: str, task_name: str):
         "group_task_avg": group_task_avg,
         "difference_percent": round(difference, 2),
     }
+
+
+@router.get("/tasks/student/{student_name}/course/{course_name}")
+def get_all_tasks(student_name: str, course_name: str):
+    student = students_collection.find_one({"name": student_name})
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+
+    course = next((course for course in student.get("courses", []) if course["course_name"] == course_name), None)
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found for the student")
+
+    tasks = course.get("tasks", [])
+    if not tasks:
+        raise HTTPException(status_code=404, detail="No tasks found for the student in this course")
+
+    formatted_tasks = [
+        {
+            "task_name": task.get("task_name", "Unnamed Task"),
+            "task_code": task.get("task_code", "No Code"),
+            "grade": task.get("grade", 0),
+        }
+        for task in tasks
+    ]
+    return {"tasks": formatted_tasks}
