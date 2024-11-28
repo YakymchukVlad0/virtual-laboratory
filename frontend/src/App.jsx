@@ -15,7 +15,7 @@ import LoginPage from "./Pages/LoginPage.jsx"; // Логін
 import RegisterPage from "./Pages/RegisterPage.jsx"; // Реєстрація
 import PrivateRoute from "./Components/PrivateRoute.jsx"; // Захищений маршрут
 import { AuthProvider } from "./Contexts/AuthContext.jsx";
-import { Provider } from "react-redux";
+import EventsNavigation from "./Components/EventsNavigation.jsx";
 
 function App() {
   return (
@@ -28,6 +28,7 @@ function App() {
             <Route path="register" element={<RegisterPage />} />
             <Route path="module" element={<PrivateRoute />}>
               <Route index element={<EventsLayout />} />
+              <Route path="activity" element= {<ActivityPage />} />
               <Route path="stats" element={<StatisticsPage />} />
               <Route path="leaderboard" element={<LeadersPage />} />
               <Route path="analytics" element={<AnalyticsPage />} />

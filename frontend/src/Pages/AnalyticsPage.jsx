@@ -1,5 +1,7 @@
+import EventsNavigation from "../Components/EventsNavigation";
 import { taskData } from "../FakeData/Data";
 import "../Styles/Analytics.css"
+
 
 const AnalyticsPage = () => {
     const generateAnalysis = (code, programmingLanguage) => {
@@ -29,7 +31,8 @@ const AnalyticsPage = () => {
         }
       };
     
-      return (
+      return ( <>
+        <EventsNavigation/>
         <div className="task-analytics">
           <h2>Task Analytics</h2>
           <div className="task-list">
@@ -56,6 +59,7 @@ const AnalyticsPage = () => {
             ))}
           </div>
         </div>
+        </>
       );
 }
  

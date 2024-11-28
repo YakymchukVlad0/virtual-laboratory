@@ -8,7 +8,7 @@ function EventsNavigation() {
         <ul className="list">
         <li>
             <NavLink
-              to="/module"
+              to="/module/activity"
               className={({ isActive }) =>
                 isActive ? `active list` : "list"
               }
@@ -17,9 +17,10 @@ function EventsNavigation() {
               My activity
             </NavLink>
           </li>
+          
           <li>
             <NavLink
-              to="stats"
+              to="/module/stats"
               className={({ isActive }) =>
                 isActive ? `active list` : "list"
               }
@@ -30,7 +31,7 @@ function EventsNavigation() {
           </li>
           <li>
             <NavLink
-              to="leaderboard"
+              to="/module/leaderboard"
               className={({ isActive }) =>
                 isActive ? `active list` : "list"
               }
@@ -40,7 +41,7 @@ function EventsNavigation() {
           </li>
           <li>
             <NavLink
-              to="analytics"
+              to="/module/analytics"
               className={({ isActive }) =>
                 isActive ? `active list` : "list"
               }

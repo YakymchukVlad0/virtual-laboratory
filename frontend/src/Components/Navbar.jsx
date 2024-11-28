@@ -1,47 +1,63 @@
-import React from "react";
-import { NavLink, Outlet } from "react-router-dom";
-import '../Styles/Navbar.css'
-import userLogo from '../Images/user-logo-png.png'
-import lablogo from '../Images/logo192.png'
+import React, { useState } from 'react';
+import { NavLink, Outlet } from 'react-router-dom';
+import { useAuth } from '../Contexts/AuthContext';
+import '../Styles/Navbar.css';
+import userLogo from '../Images/user-logo-png.png';
+import lablogo from '../Images/logo192.png';
 
 const Navbar = () => {
-    return ( 
-      <>
-        <nav className="navbar">
+  const { auth, logout } = useAuth(); // Get auth state from context
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleLogout = () => {
+    logout(); // Викликаємо вихід
+    setIsDropdownOpen(false); // Закриваємо меню
+  };
+
+  return (
+    <>
+      <nav className="navbar">
         <div className="navbar-logo">
-         
-          <img src={lablogo} alt="logo"/>
-          <h2>Virtual study laboratory</h2>
+          <h2>Virtual Study Laboratory</h2>
+          <img src={lablogo} alt="logo" />
         </div>
         <ul className="navbar-links">
-          <li>
-            <NavLink to="/">Home</NavLink>
-          </li>
-          <li>
-            <NavLink to="/module">Stats and Analytics</NavLink>
-          </li>
-          <li>
-            <NavLink to="/m2">Development</NavLink>
-          </li>
-          <li>
-            <NavLink to="/testing">Testing</NavLink>
-          </li>
-          <li>
-            <NavLink to="/export">Designing</NavLink>
-          </li>
+          <li><NavLink to="/">Home</NavLink></li>
+          <li><NavLink to="/module">Stats and Analytics</NavLink></li>
+          <li><NavLink to="/m2">Development</NavLink></li>
+          <li><NavLink to="/testing">Testing</NavLink></li>
+          <li><NavLink to="/export">Designing</NavLink></li>
         </ul>
-        <NavLink to="/profile">
-        <div className="user-info">
-            <img src={userLogo} alt="user"></img>
-            <p>Student username</p>
+        <div className="user-info" onClick={toggleDropdown}>
+          <img src={userLogo} alt="user" />
+          {/* Відображаємо ім'я користувача, якщо авторизовано */}
+          <p>{auth ? auth.username : 'Student Username'}</p>
+          {/* Меню випадає залежно від стану авторизації */}
+          <ul
+            className={`dropdown-menu ${isDropdownOpen ? 'open' : ''}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {auth ? (
+              <>
+                <li><NavLink to="/profile">Profile</NavLink></li>
+                <li><button onClick={handleLogout}>Logout</button></li>
+              </>
+            ) : (
+              <li><NavLink to="/login">Login</NavLink></li>
+            )}
+          </ul>
         </div>
-        </NavLink>
-        
       </nav>
-      <Outlet/>
-      </>
-      
-     );
-}
- 
+      <main>
+        <Outlet />
+      </main>
+    </>
+  );
+};
+
 export default Navbar;

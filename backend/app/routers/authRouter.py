@@ -1,93 +1,169 @@
+import logging
 import os
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, APIRouter
+from fastapi.responses import JSONResponse
+from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel, EmailStr
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError
 import jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from typing import Optional
-from uuid import uuid4
+from bson import ObjectId
+
 
 load_dotenv(".env.sample")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-authRouter = FastAPI()
+authRouter =APIRouter()
 uri = os.getenv("MONGO_DB_PATH")
-client = MongoClient(uri)
+client = AsyncIOMotorClient(uri)
 
+
+logging.basicConfig(level=logging.INFO)
 
 db = client["SAC"]
 users_collection = db["users"]
-
-class User(BaseModel):
-    id: str
-    email: EmailStr
-    username: str
-    hashed_password: str
-
-class UserRegister(BaseModel):
-    email: EmailStr
-    username: str
-    password: str
-
-SECRET_KEY = "your_secret_key"
+activities_collection = db["users_activity"]
+SECRET_KEY = "mysecretkey"  # Для реальних проектів використовуйте більш складний ключ
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-# Хелпери
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
-    to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=15))
-    to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+# Створення хешованого пароля
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
-def get_password_hash(password):
+# Моделі для даних
+class UserInCreate(BaseModel):
+    email: str
+    username: str
+    password: str
+
+class UserInLogin(BaseModel):
+    email: str
+    username: str
+    password: str
+
+class UserOut(BaseModel):
+    email: str
+    username: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+def convert_object_id(document):
+    if isinstance(document, dict):
+        return {key: str(value) if isinstance(value, ObjectId) else value for key, value in document.items()}
+    return document
+
+# Функція для хешування пароля
+def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
-def get_user(email: str):
-    return db.get(email)
+# Функція для перевірки пароля
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
 
-# Реєстрація
-@authRouter.post("/auth/register")
-async def register(user: UserRegister):
-    if user.email in db:
-        raise HTTPException(status_code=400, detail="User already exists")
-    hashed_password = get_password_hash(user.password)
-    new_user = User(
-        id=str(uuid4()),
-        email=user.email,
-        username=user.username,
-        hashed_password=hashed_password,
-    )
-    db[user.email] = new_user
-    return {"message": "User registered successfully"}
+# Функція для створення токену
+def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes=15)) -> str:
+    to_encode = data.copy()
+    expire = datetime.utcnow() + expires_delta
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
 
-# Логін
-@authRouter.post("/auth/login")
+# Реєстрація нового користувача
+@authRouter.post("/register", response_model=UserOut)
+async def register(user: UserInCreate):
+    # Перевірка, чи існує вже користувач з таким емейлом
+    existing_user = await users_collection.find_one({"email": user.email})
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    
+    # Хешування пароля
+    hashed_password = hash_password(user.password)
+    
+    # Створення користувача в базі даних
+    new_user = {
+        "email": user.email,
+        "username": user.username,
+        "password": hashed_password
+    }
+    result = await users_collection.insert_one(new_user)
+    
+    # Повернення результату
+    created_user = await users_collection.find_one({"_id": result.inserted_id})
+    return UserOut(email=created_user["email"], username=created_user["username"])
+# Логін користувача
+# Функція для перетворення всіх ObjectId в рядки
+def convert_objectid_to_str(obj):
+    if isinstance(obj, ObjectId):
+        return str(obj)
+    elif isinstance(obj, dict):
+        return {k: convert_objectid_to_str(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_objectid_to_str(i) for i in obj]
+    else:
+        return obj
+
+# Основна функція логіну
+@authRouter.post("/login")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = get_user(form_data.username)
-    if not user or not verify_password(form_data.password, user.hashed_password):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    token = create_access_token(data={"sub": user.email})
-    return {"access_token": token, "token_type": "bearer", "username": user.username}
+    # Знаходимо користувача
+    user = await users_collection.find_one({"email": form_data.username})
+    if not user or not verify_password(form_data.password, user["password"]):
+        raise HTTPException(status_code=400, detail="Incorrect email or password")
 
-# Перевірка токена
-@authRouter.get("/auth/me")
-async def get_me(token: str = Depends(OAuth2PasswordRequestForm)):
+    # Генеруємо токен
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(data={"sub": user["username"]}, expires_delta=access_token_expires)
+
+    # Отримуємо активність користувача
+    activities_cursor = activities_collection.find({"user_id": user["_id"]})
+    activities = await activities_cursor.to_list(length=100)
+
+    # Перетворюємо всі ObjectId в рядки
+    user = convert_objectid_to_str(user)
+    activities = convert_objectid_to_str(activities)
+
+    # Повертаємо відповідь
+    return {
+        "user": {
+            "id": str(user["_id"]),
+            "username": user["username"],
+            "email": user["email"],
+        },
+        "activities": activities,
+        "access_token": access_token
+    }
+@authRouter.options("/login")
+async def options_handler():
+    response = JSONResponse(content={})
+    response.headers["Access-Control-Allow-Origin"] = "http://localhost:5173"
+    response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    return response
+
+# Декоратор для перевірки токену (обробник запитів з токеном)
+def get_current_user(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email = payload.get("sub")
-        user = get_user(email)
-        if not user:
+        email: str = payload.get("sub")
+        if email is None:
             raise HTTPException(status_code=401, detail="Invalid token")
-        return {"username": user.username, "email": user.email}
-    except JWTError:
+        return email
+    except jwt.PyJWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
+
+# Захищений маршрут для отримання даних користувача
+@authRouter.get("/me")
+async def read_users_me(current_user: str = Depends(get_current_user)):
+    return {"username": current_user}
