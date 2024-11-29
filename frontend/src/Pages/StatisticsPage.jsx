@@ -9,6 +9,7 @@ import { SearchResultsList } from "../Components/SearchResultList.jsx";
 import "../Styles/Statistics.css";
 import TableFormat from "../Components/TableFormat.jsx";
 import DiagramFormat from "../Components/DiagramFormat.jsx";
+import EventsNavigation from "../Components/EventsNavigation.jsx";
 
 const StatisticsPage = () => {
   const [tasks, setTasks] = useState(newTasks);
@@ -131,6 +132,7 @@ const StatisticsPage = () => {
 
   return (
     <>
+      <EventsNavigation />
       <h1>My Statistics</h1>
       <div className="parameters">
         <Form>
