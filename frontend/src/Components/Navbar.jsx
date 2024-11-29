@@ -28,7 +28,7 @@ const Navbar = () => {
         </div>
         <ul className="navbar-links">
           <li><NavLink to="/">Home</NavLink></li>
-          <li><NavLink to="/module">Stats and Analytics</NavLink></li>
+          <li><NavLink to="/module/activity">Stats and Analytics</NavLink></li>
           <li><NavLink to="/m2">Development</NavLink></li>
           <li><NavLink to="/testing">Testing</NavLink></li>
           <li><NavLink to="/export">Designing</NavLink></li>

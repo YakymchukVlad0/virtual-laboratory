@@ -22,12 +22,26 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
       return;
     }
-
+  
     try {
       const response = await axios.get('http://127.0.0.1:8000/auth/me', {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setAuth({ token, username: response.data.username });  // Зберігаємо дані користувача
+  
+      // Логування відповіді для відлагодження
+      console.log('Response from /auth/me:', response);
+  
+      if (response && response.data) {
+        setAuth({
+          token,
+          username: response.data.username,
+          user_id: response.data.user_id,
+        });  // Зберігаємо дані користувача
+      } else {
+        console.error('No user data found in response');
+        logout();  // Якщо дані не знайдені, виконуємо logout
+      }
+  
     } catch (err) {
       console.error('Authorization failed:', err);
       logout();  // Якщо сталася помилка — виконуємо logout
@@ -35,6 +49,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);  // Завершуємо завантаження
     }
   };
+  
 
   // Функція для входу
   const login = async (data) => {
@@ -71,7 +86,7 @@ export const AuthProvider = ({ children }) => {
       console.log(response.data, "User logged in successfully");
       console.log(user.username, "User logged in successfully");
       // Перенаправлення на іншу сторінку після успішного логіну
-      navigate("/module");
+      navigate("/module/activity");
 
     } catch (error) {
       console.error(error);

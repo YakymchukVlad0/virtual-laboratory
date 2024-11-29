@@ -45,10 +45,13 @@ class UserInCreate(BaseModel):
     username: str
     password: str
 
-class UserInLogin(BaseModel):
+class UserInLogin(BaseModel):    
     email: str
     username: str
     password: str
+
+class UserAfterLogin(EmailStr):
+    user_id: str
 
 class UserOut(BaseModel):
     email: str
@@ -123,7 +126,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
     # Генеруємо токен
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(data={"sub": user["username"]}, expires_delta=access_token_expires)
+    access_token = create_access_token(data={"sub": str(user["_id"])}, expires_delta=access_token_expires)
 
     # Отримуємо активність користувача
     activities_cursor = activities_collection.find({"user_id": user["_id"]})
@@ -153,17 +156,25 @@ async def options_handler():
     return response
 
 # Декоратор для перевірки токену (обробник запитів з токеном)
-def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
-        if email is None:
+        user_id: str = payload.get("sub")  # "sub" зберігає user_id
+        if user_id is None:
             raise HTTPException(status_code=401, detail="Invalid token")
-        return email
+        return {"user_id": user_id}  # Повертаємо тільки ID користувача
     except jwt.PyJWTError:
-        raise HTTPException(status_code=401, detail="Invalid token")
+        raise HTTPException(status_code=401, detail="Invalid token2")
 
 # Захищений маршрут для отримання даних користувача
 @authRouter.get("/me")
-async def read_users_me(current_user: str = Depends(get_current_user)):
-    return {"username": current_user}
+async def read_users_me(current_user: dict = Depends(get_current_user)):
+    user_id = current_user["user_id"]
+    user = await users_collection.find_one({"_id": ObjectId(user_id)})  # Пошук у базі
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {
+        "user_id": str(user["_id"]),
+        "username": user["username"],
+        "email": user["email"]
+    }

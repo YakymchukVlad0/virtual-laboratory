@@ -5,14 +5,17 @@ from fastapi import FastAPI
 
 from app.routers.router import router
 from app.routers.authRouter import authRouter
+from app.routers.activityRouter import activityRouter
 
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
 origins = [
-    "http://localhost:5173",  # Додайте домен вашого клієнта
-    "http://127.0.0.1:5173",  # Якщо клієнт працює на іншій адресі
+    "http://localhost",  # для доступу з localhost
+    "http://localhost:5173",  # фронтенд, якщо він працює на цьому порту
+    "http://127.0.0.1",  # якщо сервер на 127.0.0.1
+    "http://127.0.0.1:5173"  # для доступу з цього порту
 ]
 
 app.add_middleware(
@@ -31,6 +34,7 @@ async def list_routes():
             
 app.include_router(router)
 app.include_router(authRouter, prefix="/auth", tags=["auth"])
+app.include_router(activityRouter, prefix="/activity", tags=["activity"])
 
 
 

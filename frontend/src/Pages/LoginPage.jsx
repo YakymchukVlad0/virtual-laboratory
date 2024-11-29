@@ -44,6 +44,8 @@ const Login = () => {
 
       console.log(response.data, "User logged in successfully");
       const token = localStorage.getItem("token");
+      console.log(localStorage);
+      console.log(token);
       if (token) {
           try {
             const response = await axios.get('http://127.0.0.1:8000/auth/me', {
@@ -51,14 +53,18 @@ const Login = () => {
                    'Authorization': `Bearer ${token}`,
                },
             });
-            navigate("/module");  // Перенаправлення на іншу сторінку після успішного логіну
+            setAuth({
+              username: response.data.username,
+              user_id: response.data.user_id, // Зберігаємо user_id
+            });
+            navigate("/module/activity");  // Перенаправлення на іншу сторінку після успішного логіну
             console.log(response.data); // Очікуйте отримати email користувача
           } catch (error) {
             console.error('Error fetching user data:', error);
         }
       }
       // Перенаправлення на іншу сторінку після успішного логіну
-      navigate("/module");
+      navigate("/module/activity");
 
     } catch (error) {
       console.error(error);
