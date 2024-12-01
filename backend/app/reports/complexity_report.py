@@ -13,14 +13,14 @@ def AnalyzeCodeComplexity(code):
             "Evaluate: loops, conditions, redundant operators, function duplication, and potential improvements. "
             "Please respond in the following format:\n"
             "1. **Complexity Rating** (0-20): [Provide only a numeric rating on the complexity of the code, calculated as (20 - total number of objects in the statistics)]"
-            " - The fewer the objects in the statistics (e.g., loops, conditions, duplications, redundant operators), the higher the complexity rating."
-            " - The more the objects, the lower the complexity rating."
-            " - The complexity rating is based on the formula: **20 - (total sum of all issues in statistics)**. A higher complexity rating indicates more efficient code with fewer issues."
+            " The fewer the objects in the statistics (e.g., loops, conditions, duplications, redundant operators), the higher the complexity rating."
+            " The more the objects, the lower the complexity rating."
+            " The complexity rating is based on the formula: **20 - (total sum of all issues in statistics)**. A higher complexity rating indicates more efficient code with fewer issues."
             "2. **Statistics**:\n"
-            "   - Number of loops: [Number of loops in the code]\n"
-            "   - Number of conditions: [Number of conditional statements]\n"
-            "   - Number of function duplications: [Count of duplicated functions]\n"
-            "   - Number of redundant operators: [Number of redundant operators]\n"
+            "   Number of loops: [Number of loops in the code]\n"
+            "   Number of conditions: [Number of conditional statements]\n"
+            "   Number of function duplications: [Count of duplicated functions]\n"
+            "   Number of redundant operators: [Number of redundant operators]\n"
             "3. **Notes**: [Provide key observations and any important notes related to the code]\n"
             "4. **General Comments**: [Provide any general comments about the code, including potential improvements, performance considerations, etc.]\n"
             "Code:\n"
@@ -108,92 +108,105 @@ def draw_wrapped_text(c, text, x, y, max_width, font="Helvetica", font_size=10, 
 
     return current_y  # Повертаємо нову висоту для наступного елемента
 
-# Створення PDF звіту
-def create_pdf(report, student_group, task_number, output_filename="code_complexity_report.pdf"):
-    c = canvas.Canvas(output_filename, pagesize=letter)
-    width, height = letter
+# # Створення PDF звіту
+# def create_pdf(report, student_group, task_number, output_filename="code_complexity_report.pdf"):
+#     c = canvas.Canvas(output_filename, pagesize=letter)
+#     width, height = letter
 
-    # Заголовок
-    c.setFont("Helvetica-Bold", 16)
-    title = "Code Complexity Report"
-    student_line = f"Student {student_group}"
-    task_line = f"Task #{task_number}"
+#     # Заголовок
+#     c.setFont("Helvetica-Bold", 16)
+#     title = "Code Complexity Report"
+#     student_line = f"Student {student_group}"
+#     task_line = f"Task #{task_number}"
 
-    # Центрування заголовка
-    c.drawString((width - c.stringWidth(title, "Helvetica-Bold", 16)) / 2, height - 50, title)
-    c.setFont("Helvetica", 12)
-    c.drawString((width - c.stringWidth(student_line, "Helvetica", 12)) / 2, height - 80, student_line)
-    c.drawString((width - c.stringWidth(task_line, "Helvetica", 12)) / 2, height - 110, task_line)
+#     # Центрування заголовка
+#     c.drawString((width - c.stringWidth(title, "Helvetica-Bold", 16)) / 2, height - 50, title)
+#     c.setFont("Helvetica", 12)
+#     c.drawString((width - c.stringWidth(student_line, "Helvetica", 12)) / 2, height - 80, student_line)
+#     c.drawString((width - c.stringWidth(task_line, "Helvetica", 12)) / 2, height - 110, task_line)
 
-    # Параметри для розміщення тексту
-    c.setFont("Helvetica", 10)
-    margin_left = 40  # Відступ зліва
-    margin_right = width - 40  # Відступ справа
-    max_width = margin_right - margin_left  # Ширина, до якої текст буде переноситись
+#     # Параметри для розміщення тексту
+#     c.setFont("Helvetica", 10)
+#     margin_left = 40  # Відступ зліва
+#     margin_right = width - 40  # Відступ справа
+#     max_width = margin_right - margin_left  # Ширина, до якої текст буде переноситись
 
-    # Виведення Statistics
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(margin_left, height - 150, "Statistics:")
-    current_y = height - 170  # Збільшено відступ між заголовком і текстом
-    statistics = report.get("statistics", {})
-    statistics_text = "\n".join([f"- {key}: {value}" for key, value in statistics.items()])
-    current_y = draw_wrapped_text(c, statistics_text, margin_left, current_y, max_width, line_spacing=15)
-    current_y -= 20  # Додаємо відступ між секціями
+#     # Виведення Statistics
+#     c.setFont("Helvetica-Bold", 12)
+#     c.drawString(margin_left, height - 150, "Statistics:")
+#     current_y = height - 170  # Збільшено відступ між заголовком і текстом
+#     statistics = report.get("statistics", {})
+#     statistics_text = "\n".join([f"- {key}: {value}" for key, value in statistics.items()])
+#     current_y = draw_wrapped_text(c, statistics_text, margin_left, current_y, max_width, line_spacing=15)
+#     current_y -= 20  # Додаємо відступ між секціями
 
-    # Виведення Notes
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(margin_left, current_y - 10, "Notes:")
-    current_y -= 30  # Збільшено відступ між заголовком і текстом
-    notes = report.get("notes", [])
-    notes_text = "\n".join(notes)
-    current_y = draw_wrapped_text(c, notes_text, margin_left, current_y, max_width, line_spacing=15)
-    current_y -= 20  # Додаємо відступ між секціями
+#     # Виведення Notes
+#     c.setFont("Helvetica-Bold", 12)
+#     c.drawString(margin_left, current_y - 10, "Notes:")
+#     current_y -= 30  # Збільшено відступ між заголовком і текстом
+#     notes = report.get("notes", [])
+#     notes_text = "\n".join(notes)
+#     current_y = draw_wrapped_text(c, notes_text, margin_left, current_y, max_width, line_spacing=15)
+#     current_y -= 20  # Додаємо відступ між секціями
 
-    # Виведення General Comments
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(margin_left, current_y - 10, "General Comment:")
-    current_y -= 30  # Збільшено відступ між заголовком і текстом
-    general_comments = report.get("general_comment", [])
-    general_comments_text = "\n".join(general_comments)
-    current_y = draw_wrapped_text(c, general_comments_text, margin_left, current_y, max_width, line_spacing=15)
+#     # Виведення General Comments
+#     c.setFont("Helvetica-Bold", 12)
+#     c.drawString(margin_left, current_y - 10, "General Comment:")
+#     current_y -= 30  # Збільшено відступ між заголовком і текстом
+#     general_comments = report.get("general_comment", [])
+#     general_comments_text = "\n".join(general_comments)
+#     current_y = draw_wrapped_text(c, general_comments_text, margin_left, current_y, max_width, line_spacing=15)
 
-    # Виведення Complexity Rating в правому нижньому кутку
-    complexity_rating = report.get('evaluation', 'N/A')
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(width - 200, 40, f"Complexity Rating: {complexity_rating} /20")
+#     # Виведення Complexity Rating в правому нижньому кутку
+#     complexity_rating = report.get('evaluation', 'N/A')
+#     c.setFont("Helvetica-Bold", 12)
+#     c.drawString(width - 200, 40, f"Complexity Rating: {complexity_rating} /20")
 
-    c.save()
+#     c.save()
 
 
 import sys
 import os
+from report_collect import load_report, check_ready_report, delete_report, count_tasks
 
-# Додати корінь проєкту до sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
 
 from backend.app.routers.router import get_task_code
-# from routers.authRouter import read_users_me, get_current_user
 
-# response = read_users_me(get_current_user)
-StudentName =  "Oleksandr Vasyliv"  
-# response["username"]
-# Аналіз коду для тасків 1 до 5
-for task_number in range(1, 6):
-    TaskName = f"Task {task_number}"
-    
-    # Отримуємо код для поточного таску
-    code = get_task_code(StudentName, "Developing", TaskName)
-    
-    # Перевіряємо, чи є код для цього таску
-    if code != "None":
-        # Генерація та збереження звіту, якщо код не порожній
-        report = AnalyzeCodeComplexity(code)
+
+def create_reports_for_student(StudentName, CourseName):
+
+    for number in range(1, (count_tasks(StudentName, CourseName))):
+        task_number = f"Task {number}"
+        if check_ready_report(StudentName, task_number, CourseName):
+            print("Звіт для цього коду вже існує")
+            continue
+ 
+        code = get_task_code(StudentName, CourseName, task_number)
         
-        # Створення PDF для цього таску
-        create_pdf(report, TaskName)
+
+        if code != "None":
+            report = AnalyzeCodeComplexity(code)
+
+            load_report(StudentName, task_number, CourseName, report)
+        else:
+            print(f"Немає коду для {task_number}")
+
+
+def refresh_report(StudentName, task_number, CourseName):
+    if check_ready_report(StudentName, task_number, CourseName):
+        print("Цього звіту не існує")
+        return
+    
+    delete_report(StudentName, task_number, CourseName)
+
+    code = get_task_code(StudentName, CourseName, task_number)
+    
+    if code != "None":
+        report = AnalyzeCodeComplexity(code)
+        load_report(StudentName, task_number, CourseName, report)
     else:
-        print(f"Немає коду для {TaskName}")
+        print(f"Немає коду для {task_number}")
 
-group = "PZ-47"
 
-create_pdf(report, group, TaskName)
+create_reports_for_student("Oleksandr Vasyliv", "Developing")

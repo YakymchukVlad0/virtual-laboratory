@@ -9,7 +9,7 @@ router = APIRouter()
 
 load_dotenv(".env.sample")
 
-uri = os.getenv("MONGO_DB_PATH")
+uri = "mongodb+srv://student:1111@sac.p3bc7.mongodb.net/?retryWrites=true&w=majority&appName=SAC"
 client = MongoClient(uri)
 
 db = client["SAC"]
