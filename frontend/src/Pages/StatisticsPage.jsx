@@ -1,7 +1,7 @@
 
 import {Button,Form} from "react-bootstrap";
-import { taskData as data } from "../FakeData/Data";
-import { useState } from "react";
+import newTasks from "../FakeData/tasks_data.js";
+import { useState,useEffect } from "react";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import { SearchBar } from "../Components/SearchBar.jsx";
@@ -12,30 +12,119 @@ import DiagramFormat from "../Components/DiagramFormat.jsx";
 import EventsNavigation from "../Components/EventsNavigation.jsx";
 
 const StatisticsPage = () => {
-  const [tasks, setTasks] = useState(data);
+  const [tasks, setTasks] = useState(newTasks);
   const [selectedTasks, setSelectedTasks] = useState([]);
   const [checkboxValues, setCheckboxValues] = useState({
-    positive: false,
-    negative: false,
-    fullyCompleted: false
+    beginner: false,
+    intermediate: false,
+    advanced: false,
+    on_time : false,
+    missed : false
   });
   const [selectedRadio, setSelectedRadio] = useState(null);
   const [isTableFormat, setIsTableFormat] = useState(false);
 
-  const handleCheckboxChange = (event) => {
+  /*const handleCheckboxChange = (event) => {
     const { id, checked } = event.target;
     setCheckboxValues((prev) => ({
       ...prev,
       [id]: checked
     }));
-    setTasks(data);
+    setTasks(newTasks);
     console.log(checkboxValues);
+  };*/
+  const handleCheckboxChange = (event) => {
+    const { id, checked } = event.target;
+    setCheckboxValues((prev) => ({
+      ...prev,
+      [id]: checked,
+    }));
   };
+
+  const filterTasks = () => {
+    let filteredTasks = newTasks;
+
+
+    if (checkboxValues.beginner || checkboxValues.intermediate || checkboxValues.advanced) {
+      filteredTasks = filteredTasks.filter((task) =>
+        (checkboxValues.beginner && task.SkillLevel === "beginner") ||
+        (checkboxValues.intermediate && task.SkillLevel === "intermediate") ||
+        (checkboxValues.advanced && task.SkillLevel === "advanced")
+      );
+    }
+
+   
+    if (checkboxValues.on_time || checkboxValues.missed) {
+      filteredTasks = filteredTasks.filter((task) =>
+        (checkboxValues.on_time && task.DeadlineStatus === "on time") ||
+        (checkboxValues.missed && task.DeadlineStatus === "missed deadline")
+      );
+    }
+    console.log(filteredTasks);
+    setTasks(filteredTasks);
+  };
+
+ 
+  useEffect(() => {
+    filterTasks();
+  }, [checkboxValues]);
 
   const handleRadioChange = (event) => {
     setSelectedRadio(event.target.value);
     console.log(selectedRadio);
+    if(event.target.value === 'language'){
+      tasks.sort(sortLanguage);
+    }else if(event.target.value === 'deadline_status'){
+      tasks.sort(sortDeadline);
+    }else if(event.target.value === 'level'){
+      sortLevel();
+    }
+    console.log(tasks);
   };
+
+  const sortLanguage = (a,b)=>{
+    if(a.ProgrammingLanguage < b.ProgrammingLanguage){
+      return -1;
+    }else if (a.ProgrammingLanguage === b.ProgrammingLanguage) {
+      return 0;
+    } else {
+      return 1;
+    }
+    
+  }
+
+  const sortDeadline = (a,b)=>{
+    if(a.DeadlineStatus < b.DeadlineStatus){
+      return -1;
+    }else if (a.DeadlineStatus === b.DeadlineStatus) {
+      return 0;
+    } else {
+      return 1;
+    }
+    
+  }
+
+  const sortLevel = ()=>{
+    let sorted = [];
+    for(let i = 0; i<tasks.length; i++){
+        if(tasks[i].SkillLevel === 'beginner'){
+          sorted.push(tasks[i]);
+        }
+    }
+    for(let i = 0; i<tasks.length; i++){
+      if(tasks[i].SkillLevel === 'intermediate'){
+        sorted.push(tasks[i]);
+      }
+    }
+
+    for(let i = 0; i<tasks.length; i++){
+      if(tasks[i].SkillLevel === 'advanced'){
+       sorted.push(tasks[i]);
+      }
+    }
+    console.log(sorted);
+    setTasks(sorted);
+  }
 
   const handleSwitchChange = (event) => {
     setIsTableFormat(event.target.checked);
@@ -56,26 +145,42 @@ const StatisticsPage = () => {
               <Dropdown.Menu>
                 <Form.Check
                   inline
-                  label="Only positive"
+                  label="Beginner"
                   type="checkbox"
-                  id="positive"
-                  checked={checkboxValues.positive}
+                  id="beginner"
+                  checked={checkboxValues.beginner}
                   onChange={handleCheckboxChange}
                 />
                 <Form.Check
                   inline
-                  label="Only negative"
+                  label="Intermediate"
                   type="checkbox"
-                  id="negative"
-                  checked={checkboxValues.negative}
+                  id="intermediate"
+                  checked={checkboxValues.intermediate}
                   onChange={handleCheckboxChange}
                 />
                 <Form.Check
                   inline
-                  label="Only fully completed"
+                  label="Advanced"
                   type="checkbox"
-                  id="fullyCompleted"
-                  checked={checkboxValues.fullyCompleted}
+                  id="advanced"
+                  checked={checkboxValues.advanced}
+                  onChange={handleCheckboxChange}
+                />
+                 <Form.Check
+                  inline
+                  label="On time"
+                  type="on_time"
+                  id="advanced"
+                  checked={checkboxValues.on_time}
+                  onChange={handleCheckboxChange}
+                />
+                 <Form.Check
+                  inline
+                  label="Missed"
+                  type="checkbox"
+                  id="missed"
+                  checked={checkboxValues.missed}
                   onChange={handleCheckboxChange}
                 />
               </Dropdown.Menu>
@@ -84,32 +189,32 @@ const StatisticsPage = () => {
             <div key="inline-radio" className="radio-options">
               <Form.Check
                 inline
-                label="Sort option1"
+                label="By Level"
                 name="group2"
                 type="radio"
                 id="inline-radio-1"
-                value="1"
-                checked={selectedRadio === "1"}
+                value="level"
+                checked={selectedRadio === "level"}
                 onChange={handleRadioChange}
               />
               <Form.Check
                 inline
-                label="Sort option2"
+                label="Deadline status"
                 name="group2"
                 type="radio"
                 id="inline-radio-2"
-                value="2"
-                checked={selectedRadio === "2"}
+                value="deadline_status"
+                checked={selectedRadio === "deadline_status"}
                 onChange={handleRadioChange}
               />
               <Form.Check
                 inline
-                label="Sort option3"
+                label="Programming language"
                 name="group2"
                 type="radio"
                 id="inline-radio-3"
-                value="3"
-                checked={selectedRadio === "3"}
+                value="language"
+                checked={selectedRadio === "language"}
                 onChange={handleRadioChange}
               />
             </div>
