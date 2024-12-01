@@ -57,14 +57,15 @@ const Login = () => {
               username: response.data.username,
               user_id: response.data.user_id, // Зберігаємо user_id
             });
-            navigate("/module/activity");  // Перенаправлення на іншу сторінку після успішного логіну
-            console.log(response.data); // Очікуйте отримати email користувача
+            console.log(response.data); 
+            window.location.href = "/module/activity";  // Перенаправлення на іншу сторінку після успішного логіну
+            // Очікуйте отримати email користувача
           } catch (error) {
             console.error('Error fetching user data:', error);
         }
       }
       // Перенаправлення на іншу сторінку після успішного логіну
-      navigate("/module/activity");
+      window.location.href = "/module/activity";
 
     } catch (error) {
       console.error(error);

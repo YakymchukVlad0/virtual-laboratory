@@ -68,6 +68,7 @@ const getWeekNumber = (date) => {
     return Math.ceil((days + startOfYear.getDay() + 1) / 7);
 };
 
+
 const ActivityPage = () => {
     const [totalTime, setTotalTime] = useState({ hours: 0, minutes: 0 });
     const [chartData, setChartData] = useState({});
@@ -93,6 +94,7 @@ const ActivityPage = () => {
             return;
         }
 
+        
         try {
             const response = await axios.get('http://127.0.0.1:8000/activity/stats', {
                 headers: {
