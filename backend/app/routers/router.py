@@ -9,7 +9,7 @@ router = APIRouter()
 
 load_dotenv(".env.sample")
 
-uri = os.getenv("MONGO_DB_PATH")
+uri = "mongodb+srv://student:1111@sac.p3bc7.mongodb.net/?retryWrites=true&w=majority&appName=SAC"
 client = MongoClient(uri)
 
 db = client["SAC"]
@@ -36,7 +36,7 @@ def get_student_avg(student_name: str, course_name: str):
     total_tasks = len(course.get("tasks", []))
 
     for task in course.get("tasks", []):
-        total_grade += task.get("grade", 0)
+        total_grade += task.get("PercentageScore", 0)
 
     average_grade = total_grade / total_tasks if total_tasks > 0 else 0
 
@@ -57,7 +57,7 @@ def get_group_avg(course_name: str):
         for course in student.get("courses", []):
             if course["course_name"] == course_name:
                 for task in course.get("tasks", []):
-                    total_grade += task.get("grade", 0)
+                    total_grade += task.get("PercentageScore", 0)
                     total_tasks += 1
 
     if total_tasks == 0:
@@ -80,7 +80,7 @@ def compare_student_group_avg(student_name: str, course_name: str):
     if not tasks:
         raise HTTPException(status_code=404, detail="No tasks found for the student in this course")
 
-    student_avg = sum(task.get("grade", 0) for task in tasks) / len(tasks)
+    student_avg = sum(task.get("PercentageScore", 0) for task in tasks) / len(tasks)
 
     students = students_collection.find({"courses.course_name": course_name})
     students = list(students)
@@ -94,7 +94,7 @@ def compare_student_group_avg(student_name: str, course_name: str):
         for course in student.get("courses", []):
             if course["course_name"] == course_name:
                 for task in course.get("tasks", []):
-                    total_grade += task.get("grade", 0)
+                    total_grade += task.get("PercentageScore", 0)
                     total_tasks += 1
 
     if total_tasks == 0:
@@ -113,7 +113,7 @@ def compare_student_group_avg(student_name: str, course_name: str):
     }
 
 
-@router.get("/compare/task/student/{student_name}/course/{course_name}/task/{task_name}")
+@router.get("/compare/task/student/{student_name}/course/{course_name}/task/{TaskName}")
 def compare_task_avg(student_name: str, course_name: str, task_name: str):
     student = students_collection.find_one({"name": student_name})
     if not student:
@@ -123,11 +123,11 @@ def compare_task_avg(student_name: str, course_name: str, task_name: str):
     if not course:
         raise HTTPException(status_code=404, detail="Course not found for the student")
 
-    task = next((task for task in course.get("tasks", []) if task["task_name"] == task_name), None)
+    task = next((task for task in course.get("tasks", []) if task["TaskName"] == task_name), None)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found for the student")
 
-    student_task_grade = task.get("grade", 0)
+    student_task_grade = task.get("PercentageScore", 0)
 
     students = students_collection.find({"courses.course_name": course_name})
     students = list(students)
@@ -141,9 +141,9 @@ def compare_task_avg(student_name: str, course_name: str, task_name: str):
     for student in students:
         for course in student.get("courses", []):
             if course["course_name"] == course_name:
-                task = next((task for task in course.get("tasks", []) if task["task_name"] == task_name), None)
+                task = next((task for task in course.get("tasks", []) if task["TaskName"] == task_name), None)
                 if task:
-                    total_grade += task.get("grade", 0)
+                    total_grade += task.get("PercentageScore", 0)
                     total_students += 1
 
     group_task_avg = total_grade / total_students if total_students > 0 else 0
@@ -172,10 +172,41 @@ def get_all_tasks(student_name: str, course_name: str):
 
     formatted_tasks = [
         {
-            "task_name": task.get("task_name", "Unnamed Task"),
-            "task_code": task.get("task_code", "No Code"),
-            "grade": task.get("grade", 0),
+            "TaskName": task.get("TaskName", "Unnamed Task"),
+            "Code": task.get("Code", "No Code"),
+            "PercentageScore": task.get("PercentageScore", 0),
         }
         for task in tasks
     ]
     return {"tasks": formatted_tasks}
+
+
+def get_task_code(student_name: str, course_name: str, TaskName: str):
+    student = students_collection.find_one({"name": student_name})
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+
+    course = next((course for course in student.get("courses", []) if course["course_name"] == course_name), None)
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found for the student")
+
+    task = next((task for task in course.get("tasks", []) if task["TaskName"] == TaskName), None)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found for the student")
+    
+    return task.get("Code", "No Code Available")
+
+def get_language(student_name: str, course_name: str, TaskName: str):
+    student = students_collection.find_one({"name": student_name})
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+
+    course = next((course for course in student.get("courses", []) if course["course_name"] == course_name), None)
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found for the student")
+
+    task = next((task for task in course.get("tasks", []) if task["TaskName"] == TaskName), None)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found for the student")
+    
+    return task.get("ProgrammingLanguage", "No ProgrammingLanguage Available")

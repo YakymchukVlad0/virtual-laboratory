@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from app.routers.router import router
 from app.routers.authRouter import authRouter
 from app.routers.activityRouter import activityRouter
+from app.reports.analyticsRouter import analyticsRouter
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -35,6 +36,7 @@ async def list_routes():
 app.include_router(router)
 app.include_router(authRouter, prefix="/auth", tags=["auth"])
 app.include_router(activityRouter, prefix="/activity", tags=["activity"])
+app.include_router(analyticsRouter, prefix="/analytics", tags=["analytics"])
 
 
 
