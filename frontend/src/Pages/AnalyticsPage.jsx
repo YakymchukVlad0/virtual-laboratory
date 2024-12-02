@@ -1,9 +1,34 @@
 import EventsNavigation from "../Components/EventsNavigation";
 import { taskData } from "../FakeData/Data";
 import "../Styles/Analytics.css"
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
 
+import { useAuth } from '../Contexts/AuthContext';
 
 const AnalyticsPage = () => {
+  const { auth } = useAuth();
+  const [reports, setReports] = useState([]);
+
+
+  useEffect(() => {
+    if (!auth || !auth.username) return; // Ensure auth and username are available
+
+    const fetchReports = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/analytics/reports', {
+          params: { username: auth.username } // Send username to the server
+        });
+        console.log(response.data); // Log the server response
+        setReports(response.data); // Save the response data
+      } catch (error) {
+        console.error('Error fetching reports:', error);
+      }
+    };
+
+    fetchReports();
+  }, [auth]);
+
     const generateAnalysis = (code, programmingLanguage) => {
         if (programmingLanguage === "JavaScript") {
           return [
@@ -43,7 +68,7 @@ const AnalyticsPage = () => {
                   <code>{task.code}</code>
                 </pre>
                 <div className="analysis">
-                  <h4>Code Analysis:</h4>
+                  <h4>"asdasd"</h4>
                   <ul>
                     {generateAnalysis(task.code, task.programmingLanguage).map((line, index) => (
                       <li key={index}>{line}</li>

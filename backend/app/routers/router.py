@@ -195,3 +195,18 @@ def get_task_code(student_name: str, course_name: str, TaskName: str):
         raise HTTPException(status_code=404, detail="Task not found for the student")
     
     return task.get("Code", "No Code Available")
+
+def get_language(student_name: str, course_name: str, TaskName: str):
+    student = students_collection.find_one({"name": student_name})
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+
+    course = next((course for course in student.get("courses", []) if course["course_name"] == course_name), None)
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found for the student")
+
+    task = next((task for task in course.get("tasks", []) if task["TaskName"] == TaskName), None)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found for the student")
+    
+    return task.get("ProgrammingLanguage", "No ProgrammingLanguage Available")

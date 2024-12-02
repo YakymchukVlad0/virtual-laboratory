@@ -16,13 +16,14 @@ db = client["SAC"]
 reports_collection = db['reports']
 
 
-def load_report(student_name, task_number, course, report):
+def upload_report(student_name, task_number, course, report, language):
     try:
         # Створення документа для завантаження в MongoDB
         report_document = {
             "student_name": student_name,
             "course": course,
             "task_number": task_number,
+            "language": language,
             "evaluation": report.get("evaluation", "N/A"),
             "statistics": report.get("statistics", {}),
             "notes": report.get("notes", []),
@@ -57,7 +58,7 @@ def check_ready_report(student_name, task_number, course):
 
 def delete_report(student_name, task_number, course):
     try:
-        existing_report = reports_collection.delete_one({
+        reports_collection.delete_one({
         "student_name": student_name,
         "task_number": task_number,
         "course": course
@@ -73,5 +74,22 @@ def count_tasks(student_name, course):
         })
 
         return (task_count+1)
+    except Exception as e:
+        return {"error": str(e)}
+    
+
+def download_reports(student_name, course):
+    try:
+        tasks = reports_collection.find({
+            "student_name": student_name,
+            "course": course
+        })
+
+        tasks_list = []
+        for task in tasks:
+            task['_id'] = str(task['_id']) 
+            tasks_list.append(task)
+
+        return tasks_list
     except Exception as e:
         return {"error": str(e)}

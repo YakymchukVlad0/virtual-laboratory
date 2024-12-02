@@ -2,8 +2,18 @@ from reportlab.lib.pagesizes import letter
 
 from reportlab.pdfgen import canvas
 
-from openAI import GenerateReport
+from .openAI import GenerateReport
 import re
+import sys
+import os
+from .report_collect import upload_report, check_ready_report, delete_report, count_tasks
+
+
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
+
+from backend.app.routers.router import get_task_code, get_language
+
 
 
 def AnalyzeCodeComplexity(code):
@@ -165,30 +175,24 @@ def draw_wrapped_text(c, text, x, y, max_width, font="Helvetica", font_size=10, 
 #     c.save()
 
 
-import sys
-import os
-from report_collect import load_report, check_ready_report, delete_report, count_tasks
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
-
-from backend.app.routers.router import get_task_code
 
 
 def create_reports_for_student(StudentName, CourseName):
 
-    for number in range(1, (count_tasks(StudentName, CourseName))):
-        task_number = f"Task {number}"
+    for number in range(0, (count_tasks(StudentName, CourseName))):
+        task_number = f"Task {number + 1}"
         if check_ready_report(StudentName, task_number, CourseName):
             print("Звіт для цього коду вже існує")
             continue
  
         code = get_task_code(StudentName, CourseName, task_number)
-        
+        language = get_language(StudentName, CourseName, task_number)
 
         if code != "None":
             report = AnalyzeCodeComplexity(code)
 
-            load_report(StudentName, task_number, CourseName, report)
+            upload_report(StudentName, task_number, CourseName, report, language)
         else:
             print(f"Немає коду для {task_number}")
 
@@ -201,12 +205,9 @@ def refresh_report(StudentName, task_number, CourseName):
     delete_report(StudentName, task_number, CourseName)
 
     code = get_task_code(StudentName, CourseName, task_number)
-    
+    language = get_language(StudentName, CourseName, task_number)
     if code != "None":
         report = AnalyzeCodeComplexity(code)
-        load_report(StudentName, task_number, CourseName, report)
+        upload_report(StudentName, task_number, CourseName, report, language)
     else:
         print(f"Немає коду для {task_number}")
-
-
-create_reports_for_student("Oleksandr Vasyliv", "Developing")
