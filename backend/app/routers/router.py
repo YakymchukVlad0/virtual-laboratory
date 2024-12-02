@@ -200,8 +200,19 @@ def get_all_tasks(student_name: str, course_name: str):
     formatted_tasks = [
         {
             "TaskName": task.get("TaskName", "Unnamed Task"),
-            "Code": task.get("Code", "No Code"),
-            "PercentageScore": task.get("PercentageScore", 0),
+            "Code": task.get("Code", "None"),
+            "TasksCompleted": task.get("TasksCompleted", 0),
+            "Attempts": task.get("Attempts", 0),
+            "Errors": task.get("Errors", 0),
+            "PercentageScore": f"{task.get('PercentageScore', 0)}%",
+            "TimeSpent": f"{task.get('TimeSpent', 0.0)}",
+            "Deadline": task.get("Deadline", "Unknown"),
+            "ProgrammingLanguage": task.get("ProgrammingLanguage", "Unknown"),
+            "TaskCategory": task.get("TaskCategory", "Uncategorized"),
+            "AverageCompletionTime": f"{task.get('AverageCompletionTime', 0.0)}",
+            "DeadlineStatus": task.get("DeadlineStatus", "unknown"),
+            "SkillLevel": task.get("SkillLevel", "unknown"),
+            "CodeLength": task.get("CodeLength", "None"),
         }
         for task in tasks
     ]

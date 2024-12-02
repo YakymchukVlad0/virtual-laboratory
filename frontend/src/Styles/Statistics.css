@@ -1,66 +1,136 @@
 /* Statistics.css */
 
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Page Header */
+h1 {
+    text-align: center;
+    margin-top: 2vh;
+    font-size: 2rem;
+    color: #333;
+}
+
+/* Parameters Container */
 .parameters {
-    padding-top: 3vh;
-    width: 60%;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 300px;
-}
-
-.filter-container {
-    display: flex;
-    gap: 1em;
-    justify-content: space-around; /* Ensures even spacing */
-    align-items: center;
-    width: 100%; 
-    margin-bottom: 1em;
-    position: relative; /* Ensures dropdown is positioned relative to this container */
-}
-
-.dropdown-container {
-    position: relative; /* Keep dropdown positioning relative to the parent */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.dropdown-container .dropdown-menu {
-    position: absolute; /* Forces dropdown to appear directly below the button */
-    top: 100%; /* Align dropdown below the toggle button */
-    left: 0; /* Adjust alignment if necessary */
-    z-index: 1050; /* Ensure it appears above other elements */
-}
-
-
-.dropdown-container .btn-group .btn,
-.dropdown-container .btn-group .dropdown-toggle {
-    width: 100%;
-}
-
-.radio-options {
-    display: flex;
-    gap: 1em;
-}
-
-.search-bar-container {
-    padding-top: 2vh;
+    padding: 3vh 0;
     width: 80%;
     margin: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 250px;
+    gap: 2rem; /* Adds spacing between form sections */
+    min-width: 300px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Filter Container */
+.filter-container {
+    display: flex;
+    flex-wrap: wrap; /* Ensures wrapping for smaller screens */
+    gap: 1.5rem; /* Adds spacing between elements */
+    justify-content: center; /* Centers the filters */
+    align-items: center;
+    width: 100%;
+    position: relative;
+}
+
+/* Dropdown Container */
+.dropdown-container {
+    position: relative; /* Keeps dropdowns relative to this element */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 200px;
+}
+
+.dropdown-container .btn-group .btn,
+.dropdown-container .btn-group .dropdown-toggle {
+    width: 100%; /* Full-width dropdown buttons */
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+.dropdown-container .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 5px); /* Below the button */
+    left: 0;
+    z-index: 1050; /* Ensures dropdown appears above other elements */
+    min-width: 150px; /* Prevents narrow dropdowns */
+    background-color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 0.5em;
+}
+
+/* Checkbox Styling in Dropdown */
+.dropdown-container .dropdown-menu .form-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Spacing between checkbox and label */
+}
+
+/* Radio Options */
+.radio-options {
+    display: flex;
+    flex-wrap: wrap; /* Wraps radios on smaller screens */
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Search Bar Container */
+.search-bar-container {
+    padding-top: 2vh;
+    width: 80%; /* Matches content container width */
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem; /* Spacing between search bar and results */
+}
+
+/* Format Switch */
+.formatSwitch {
+    margin-top: 2rem;
+}
+
+/* Content Container */
 .content-container {
     width: 80%;
     margin: auto;
     padding-top: 2vh;
 }
 
-.formatSwitch{
-    margin-top: 50px;
+/* Responsiveness */
+@media screen and (max-width: 768px) {
+    .parameters {
+        width: 95%; /* Reduce container width for smaller screens */
+    }
+
+    .filter-container {
+        flex-direction: column; /* Stacks filters vertically */
+        gap: 1rem;
+    }
+
+    .dropdown-container {
+        min-width: 100%; /* Full-width dropdown on small screens */
+    }
+
+    .search-bar-container {
+        width: 95%;
+    }
+
+    .content-container {
+        width: 95%;
+    }
 }

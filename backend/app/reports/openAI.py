@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv(".env.sample")
 
-KEY = os.getenv("AI_KEY")
+KEY = "sk-svcacct-7FdwQAahyZ3SwNS69VlvLXOUDgn1k57rWpp00qL_n54sNj-8ld4yg-BhY6x-T3BlbkFJwEsiO9i6ye8rahcwz7WJFZMPjgwwMLg_m1OXjfjX-BhQS9XJ_d0J68ghBO8A"
 
 
 openai.api_key = KEY
