@@ -27,10 +27,10 @@ def AnalyzeCodeComplexity(code):
             " The more the objects, the lower the complexity rating."
             " The complexity rating is based on the formula: **20 - (total sum of all issues in statistics)**. A higher complexity rating indicates more efficient code with fewer issues."
             "2. **Statistics**:\n"
-            "   Number of loops: [Number of loops in the code]\n"
-            "   Number of conditions: [Number of conditional statements]\n"
-            "   Number of function duplications: [Count of duplicated functions]\n"
-            "   Number of redundant operators: [Number of redundant operators]\n"
+            " Number of loops: [Number of loops in the code]\n"
+            " Number of conditions: [Number of conditional statements]\n"
+            " Number of function duplications: [Count of duplicated functions]\n"
+            " Number of redundant operators: [Number of redundant operators]\n"
             "3. **Notes**: [Provide key observations and any important notes related to the code]\n"
             "4. **General Comments**: [Provide any general comments about the code, including potential improvements, performance considerations, etc.]\n"
             "Code:\n"
@@ -118,61 +118,61 @@ def draw_wrapped_text(c, text, x, y, max_width, font="Helvetica", font_size=10, 
 
     return current_y  # Повертаємо нову висоту для наступного елемента
 
-# # Створення PDF звіту
-# def create_pdf(report, student_group, task_number, output_filename="code_complexity_report.pdf"):
-#     c = canvas.Canvas(output_filename, pagesize=letter)
-#     width, height = letter
+# Створення PDF звіту
+def create_pdf(report, student_group, task_number, output_filename="code_complexity_report.pdf"):
+    c = canvas.Canvas(output_filename, pagesize=letter)
+    width, height = letter
 
-#     # Заголовок
-#     c.setFont("Helvetica-Bold", 16)
-#     title = "Code Complexity Report"
-#     student_line = f"Student {student_group}"
-#     task_line = f"Task #{task_number}"
+    # Заголовок
+    c.setFont("Helvetica-Bold", 16)
+    title = "Code Complexity Report"
+    student_line = f"Student {student_group}"
+    task_line = f"Task #{task_number}"
 
-#     # Центрування заголовка
-#     c.drawString((width - c.stringWidth(title, "Helvetica-Bold", 16)) / 2, height - 50, title)
-#     c.setFont("Helvetica", 12)
-#     c.drawString((width - c.stringWidth(student_line, "Helvetica", 12)) / 2, height - 80, student_line)
-#     c.drawString((width - c.stringWidth(task_line, "Helvetica", 12)) / 2, height - 110, task_line)
+    # Центрування заголовка
+    c.drawString((width - c.stringWidth(title, "Helvetica-Bold", 16)) / 2, height - 50, title)
+    c.setFont("Helvetica", 12)
+    c.drawString((width - c.stringWidth(student_line, "Helvetica", 12)) / 2, height - 80, student_line)
+    c.drawString((width - c.stringWidth(task_line, "Helvetica", 12)) / 2, height - 110, task_line)
 
-#     # Параметри для розміщення тексту
-#     c.setFont("Helvetica", 10)
-#     margin_left = 40  # Відступ зліва
-#     margin_right = width - 40  # Відступ справа
-#     max_width = margin_right - margin_left  # Ширина, до якої текст буде переноситись
+    # Параметри для розміщення тексту
+    c.setFont("Helvetica", 10)
+    margin_left = 40  # Відступ зліва
+    margin_right = width - 40  # Відступ справа
+    max_width = margin_right - margin_left  # Ширина, до якої текст буде переноситись
 
-#     # Виведення Statistics
-#     c.setFont("Helvetica-Bold", 12)
-#     c.drawString(margin_left, height - 150, "Statistics:")
-#     current_y = height - 170  # Збільшено відступ між заголовком і текстом
-#     statistics = report.get("statistics", {})
-#     statistics_text = "\n".join([f"- {key}: {value}" for key, value in statistics.items()])
-#     current_y = draw_wrapped_text(c, statistics_text, margin_left, current_y, max_width, line_spacing=15)
-#     current_y -= 20  # Додаємо відступ між секціями
+    # Виведення Statistics
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(margin_left, height - 150, "Statistics:")
+    current_y = height - 170  # Збільшено відступ між заголовком і текстом
+    statistics = report.get("statistics", {})
+    statistics_text = "\n".join([f"- {key}: {value}" for key, value in statistics.items()])
+    current_y = draw_wrapped_text(c, statistics_text, margin_left, current_y, max_width, line_spacing=15)
+    current_y -= 20  # Додаємо відступ між секціями
 
-#     # Виведення Notes
-#     c.setFont("Helvetica-Bold", 12)
-#     c.drawString(margin_left, current_y - 10, "Notes:")
-#     current_y -= 30  # Збільшено відступ між заголовком і текстом
-#     notes = report.get("notes", [])
-#     notes_text = "\n".join(notes)
-#     current_y = draw_wrapped_text(c, notes_text, margin_left, current_y, max_width, line_spacing=15)
-#     current_y -= 20  # Додаємо відступ між секціями
+    # Виведення Notes
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(margin_left, current_y - 10, "Notes:")
+    current_y -= 30  # Збільшено відступ між заголовком і текстом
+    notes = report.get("notes", [])
+    notes_text = "\n".join(notes)
+    current_y = draw_wrapped_text(c, notes_text, margin_left, current_y, max_width, line_spacing=15)
+    current_y -= 20  # Додаємо відступ між секціями
 
-#     # Виведення General Comments
-#     c.setFont("Helvetica-Bold", 12)
-#     c.drawString(margin_left, current_y - 10, "General Comment:")
-#     current_y -= 30  # Збільшено відступ між заголовком і текстом
-#     general_comments = report.get("general_comment", [])
-#     general_comments_text = "\n".join(general_comments)
-#     current_y = draw_wrapped_text(c, general_comments_text, margin_left, current_y, max_width, line_spacing=15)
+    # Виведення General Comments
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(margin_left, current_y - 10, "General Comment:")
+    current_y -= 30  # Збільшено відступ між заголовком і текстом
+    general_comments = report.get("general_comment", [])
+    general_comments_text = "\n".join(general_comments)
+    current_y = draw_wrapped_text(c, general_comments_text, margin_left, current_y, max_width, line_spacing=15)
 
-#     # Виведення Complexity Rating в правому нижньому кутку
-#     complexity_rating = report.get('evaluation', 'N/A')
-#     c.setFont("Helvetica-Bold", 12)
-#     c.drawString(width - 200, 40, f"Complexity Rating: {complexity_rating} /20")
+    # Виведення Complexity Rating в правому нижньому кутку
+    complexity_rating = report.get('evaluation', 'N/A')
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(width - 200, 40, f"Complexity Rating: {complexity_rating} /20")
 
-#     c.save()
+    c.save()
 
 
 

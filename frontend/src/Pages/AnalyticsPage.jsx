@@ -1,5 +1,4 @@
 import EventsNavigation from "../Components/EventsNavigation";
-import { taskData } from "../FakeData/Data";
 import "../Styles/Analytics.css"
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
@@ -10,7 +9,6 @@ const AnalyticsPage = () => {
   const { auth } = useAuth();
   const [reports, setReports] = useState([]);
 
-
   useEffect(() => {
     if (!auth || !auth.username) return; // Ensure auth and username are available
 
@@ -20,7 +18,7 @@ const AnalyticsPage = () => {
           params: { username: auth.username } // Send username to the server
         });
         console.log(response.data); // Log the server response
-        setReports(response.data); // Save the response data
+        setReports(response.data.reports); // Save the response data
       } catch (error) {
         console.error('Error fetching reports:', error);
       }
@@ -29,63 +27,72 @@ const AnalyticsPage = () => {
     fetchReports();
   }, [auth]);
 
-    const generateAnalysis = (code, programmingLanguage) => {
-        if (programmingLanguage === "JavaScript") {
-          return [
-            "The code defines a function to calculate the factorial of a number using recursion.",
-            "It uses a base case when `n` is 0, returning 1. Otherwise, it multiplies `n` by the factorial of `n-1`.",
-            "This approach is simple but might cause a stack overflow if `n` is too large due to recursion depth."
-          ];
-        } else if (programmingLanguage === "Python") {
-          return [
-            "This code loops through numbers 0 to 9 and prints each value.",
-            "It's a basic loop structure, useful for understanding iteration in programming.",
-            "This example also demonstrates the use of the `console.log` function to output data to the console."
-          ];
-        } else if (programmingLanguage === "Java") {
-          return [
-            "The code is a simple `main` method in Java that prints 'Hello' to the console.",
-            "It demonstrates the basic structure of a Java program with the `main` method as the entry point.",
-            "This program doesn't take input and just outputs a static string."
-          ];
-        } else {
-          return [
-            "The code is written in " + programmingLanguage + " and performs basic functionality.",
-            "It demonstrates core syntax and structure of the language."
-          ];
-        }
-      };
-    
-      return ( <>
-        <EventsNavigation/>
-        <div className="task-analytics">
-          <h2>Task Analytics</h2>
-          <div className="task-list">
-            {taskData.map((task) => (
-              <div key={task.id} className="task-card">
-                <h3>{task.name} - {task.programmingLanguage}</h3>
-                <pre>
-                  <code>{task.code}</code>
-                </pre>
-                <div className="analysis">
-                  <h4>"asdasd"</h4>
-                  <ul>
-                    {generateAnalysis(task.code, task.programmingLanguage).map((line, index) => (
-                      <li key={index}>{line}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="task-stats">
-                  <p><strong>Success Rate:</strong> {task.successRate}%</p>
-                  <p><strong>Time Spent:</strong> {task.timeSpent}</p>
-                  <p><strong>Errors:</strong> {task.errors}</p>
-                </div>
+  const downloadReport = async (report) => {
+    try {
+      const response = await axios.post('http://localhost:8000/analytics/download', {
+        username: auth.username, // Send the username
+        report: report, // Send the task report object
+      }, {
+        responseType: 'blob', // Indicate that we expect a PDF file (blob data)
+      });
+
+      // Create a Blob from the response and generate a URL
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+
+      // Create a temporary anchor element to trigger the download
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${report.task_number}_report.pdf`; // Set the filename for download
+      link.click(); // Trigger the download
+      URL.revokeObjectURL(url); // Clean up the Blob URL after download
+
+    } catch (error) {
+      console.error('Error downloading the report:', error);
+    }
+  };
+
+  return (
+    <>
+      <EventsNavigation />
+      <div className="task-analytics">
+        <h2>Task Analytics</h2>
+        <div className="task-list">
+          {reports.map((report, index) => (
+            <div key={index} className="task-card">
+              <h3>{report.task_number} - {report.language}</h3>
+              <p><strong>Course:</strong> {report.course}</p>
+              <p><strong>Language:</strong> {report.language}</p>
+              <div className="analysis">
+                <h4>General Comments:</h4>
+                <ul>
+                  {report.general_comment.map((comment, idx) => (
+                    <li key={idx}>{comment}</li>
+                  ))}
+                </ul>
+                <h4>Notes:</h4>
+                <ul>
+                  {report.notes.map((note, idx) => (
+                    <li key={idx}>{note}</li>
+                  ))}
+                </ul>
+                <h4>Statistics:</h4>
+                <ul>
+                  <p>Number of conditions: {report.statistics["Number of conditions"]}</p>
+                  <p>Number of function duplications: {report.statistics["Number of function duplications"]}</p>
+                  <p>Number of loops: {report.statistics["Number of loops"]}</p>
+                  <p>Number of redundant operators: {report.statistics["Number of redundant operators"]}</p>
+                </ul>
+                <h4>Evaluate:</h4>
+                <p>The complexity of the code is evaluated in: <strong>{report.evaluation}/20 </strong></p>
               </div>
-            ))}
-          </div>
+              <button onClick={() => downloadReport(report)} className="download-btn">Download</button>
+            </div>
+          ))}
         </div>
-        </>
-      );
+      </div>
+    </>
+  );
 }
- 
+
 export default AnalyticsPage;
