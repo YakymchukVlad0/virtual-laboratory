@@ -31,9 +31,9 @@ def generate_user_activity(users_collection, activities_collection):
     # Генерація даних активності для кожного користувача
     for user in users:
         user_id = user["_id"]  # Отримуємо user_id
-        for _ in range(30):  # Генеруємо активність на 30 днів
-            visit_date = datetime.now() - timedelta(days=random.randint(0, 30))  # Випадкова дата в межах останнього місяця
-            duration = random.randint(600, 7200)  # Випадкова тривалість сесії від 10 хвилин до 2 годин
+        for _ in range(50):  # Генеруємо активність на 30 днів
+            visit_date = datetime.now() - timedelta(days=random.randint(0, 45))  # Випадкова дата в межах останнього місяця
+            duration = random.randint(300, 3600)  # Випадкова тривалість сесії від 10 хвилин до 2 годин
 
             # Записуємо активність в колекцію
             activities_collection.insert_one({

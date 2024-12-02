@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "../Styles/Activity.css";
 import DateFilter from "../Components/DateFilter.jsx";
 import EventsNavigation from "../Components/EventsNavigation.jsx";
 import {
@@ -182,6 +183,7 @@ const ActivityPage = () => {
 
     return (
         <>
+        <div className="activity-page">
             <EventsNavigation />
             <h1>My Activity</h1>
             <h3>Activity Insights</h3>
@@ -255,6 +257,7 @@ const ActivityPage = () => {
                         }}
                     />
                 )}
+            </div>
             </div>
         </>
     );
