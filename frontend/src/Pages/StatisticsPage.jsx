@@ -10,6 +10,7 @@ import "../Styles/Statistics.css";
 import TableFormat from "../Components/TableFormat.jsx";
 import DiagramFormat from "../Components/DiagramFormat.jsx";
 import EventsNavigation from "../Components/EventsNavigation.jsx";
+import axios from 'axios';
 
 const StatisticsPage = () => {
   const [tasks, setTasks] = useState(newTasks);
@@ -23,6 +24,47 @@ const StatisticsPage = () => {
   });
   const [selectedRadio, setSelectedRadio] = useState(null);
   const [isTableFormat, setIsTableFormat] = useState(false);
+
+  const fetchTaskStats = async () => {
+    const token = localStorage.getItem('token');
+    const userString = localStorage.getItem('user');
+
+    if (!userString) {
+        alert("Please log in again.");
+        return;
+    }
+
+    const user = JSON.parse(userString);
+    const userId = user.id;
+    console.log(userId);
+    console.log(user);
+
+    if (!userId) {
+        alert("Please log in again.");
+        return;
+    }
+
+    
+    try {
+        const response = await axios.get(`http://127.0.0.1:8000/tasks/student/${user.username}/course/Developing`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+           
+        });
+        console.log(response)
+
+        
+
+    } catch (error) {
+        console.error("Error fetching activity stats:", error);
+        alert("There was an error fetching your activity stats. Please try again later.");
+    }
+};
+
+useEffect(()=>{
+  fetchTaskStats();
+},[])
 
   /*const handleCheckboxChange = (event) => {
     const { id, checked } = event.target;
