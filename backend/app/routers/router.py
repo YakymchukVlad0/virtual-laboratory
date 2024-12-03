@@ -27,7 +27,34 @@ def get_course_from_student(student_name: str, course_name: str):
 
     return course
 
+def student_to_dict(student):
+    return {
+        "_id": str(student["_id"]),
+        "name": student["name"],
+        "group": student["group"],
+        "courses": student["courses"],
+        "tasks": student.get("tasks", [])
+    }
 
+@router.get("/students")
+async def get_students():
+    try:
+        students_cursor = students_collection.find({})
+        students = list(students_cursor)
+        
+        for student in students:
+            student["_id"] = str(student["_id"])
+            # Об'єднуємо всі завдання з усіх курсів
+            student["tasks"] = [
+                task
+                for course in student.get("courses", [])
+                for task in course.get("tasks", [])
+            ]
+        
+        return students
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
 @router.get("/student/{student_name}/course/{course_name}/avg")
 def get_student_avg(student_name: str, course_name: str):
     course = get_course_from_student(student_name, course_name)

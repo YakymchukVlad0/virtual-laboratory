@@ -12,15 +12,15 @@
     top: 100%;
     left: 0;
     z-index: 1;
-    width: 400px;
-    margin-top: 5px;
+    width: 430px;
+    margin-top: -20px;
 }
 
 .dropdown-content {
-    background-color: white;
-    padding: 20px;
+    background-color: #333;
+    color: #ccc;
+    padding-left: 20px;
     border-radius: 8px;
-    border: 1px solid #ccc;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -33,14 +33,13 @@
 
 .calendar div {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 2px; /* Smaller gap between radio button and label */
     margin-bottom: 10px;
-    width: fit-content; /* Prevents div from taking full width */
 }
 
 .calendar label {
-    color: #333;
+    color: #b0b0b0;
     font-weight: normal;
     margin-left: 2px; /* Fine-tunes spacing from the radio button */
 }
@@ -48,25 +47,28 @@
 .buttons {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 20px;
+    margin-top: -45px;  
 }
 
 /* Стилі для полів введення дати */
 .date-inputs {
     display: flex;
-    gap: 10px;
+    gap: 3px;
     margin-bottom: 15px;
+    align-items: baseline;
 }
 
 .date-inputs label {
-    font-size: 14px;
-    color: #333;
+    font-size: 17px;
+    color: #b0b0b0;
     margin-right: 5px;
 }
 
 .date-inputs input {
-    padding: 8px;
-    width: 100px;
+    padding: 3px;
+    width: 139px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    margin-left: 0 ;
 }

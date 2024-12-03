@@ -1,0 +1,52 @@
+.leaderboard {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+.filters {
+    display: flex;
+    gap: 4%;
+    margin-bottom: 20px;
+    margin-left: 50px;
+}
+
+.filters select {
+    padding: 5px;
+    font-size: 14px;
+    background-color: #cfcfcf;
+    border: 1px solid #ccc;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 8px;
+}
+
+.leaderboard-table tr:hover {
+    background-color: #6a773f;
+}
+
+.highlight-row {
+    background-color: #567d56;
+    font-weight: bold;
+}
+
+th:hover {
+    cursor: pointer;
+}
+
+th.sorted-ascending::after {
+    content: " ▲";
+}
+
+th.sorted-descending::after {
+    content: " ▼";
+}

@@ -77,16 +77,23 @@ const Login = () => {
     <div>
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="loginInput" style={{display: 'flex',
+    alignItems: 'baseline',
+    paddingRight: '15px',
+    marginLeft: '30px'}}>
           <label>Email</label>
           <input
             type="email"
             value={email}
+            style={{marginLeft: '8%'}}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
-        <div>
+        <div className="loginInput" style={{display: 'flex',
+    alignItems: 'baseline',
+    paddingRight: '15px',
+    marginLeft: '30px'}}>
           <label>Password</label>
           <input
             type="password"

@@ -46,37 +46,77 @@
   }
   
   .user-info {
+    position: relative; /* Батьківський контейнер для абсолютного меню */
     display: flex;
+    flex-direction: row; /* Розташування аватару та імені вертикально */
     align-items: center;
-    color: white;
-    margin-right: 30px;
-  }
-  
-  .user-info img {
-    height: 40px; /* Adjust to your desired size */
-    width: auto;  /* Maintain the aspect ratio */
-    border-radius: 50%; /* Optional: Makes the image round */
-  }
-  
-  .user-info p {
-    margin-left: 10px; /* Add some spacing between the image and text */
-    color: #fff;
-    margin-top: 20px;
-    text-decoration: none;
-  }
-  
-  .dropdown-menu {
-    display: none; 
-    position: absolute;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 50px;
-    border-radius: 5px;
-    z-index: 100;
-  }
-  
-  .dropdown-menu.open {
-    display: block; 
+    cursor: pointer;
+}
+
+.user-header {
+    display: flex;
+    flex-direction: row; /* Ім'я користувача під аватаром */
+    align-items: center;
+}
+
+.user-logo {
+    max-width: 30px;
+    max-height: 30px;
+    border-radius: 50%;
+}
+
+.user-logo img { /* Аватар користувача */
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.username {
+    font-size: 14px;
+    margin-top: 8px;
+    color: #333;
+    text-align: center;
+}
+
+.dropdown-menu1 {
+    position: absolute; /* Абсолютне позиціонування */
+    top: 100%; /* Розташування під ім'ям */
+    left: 50%; /* Вирівнювання по центру */
+    transform: translateX(-50%); /* Центрування */
     background-color: #333;
-    margin-top: 5%;
-    min-width: 14rem;
-  }
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+    list-style: none;
+    z-index: 1000;
+    width: max-content; /* Автоматична ширина відповідно до вмісту */
+    min-width: 120px; /* Мінімальна ширина меню */
+}
+
+.dropdown-menu1 li {
+    padding: 8px 16px;
+    text-align: center;
+}
+
+.dropdown-menu1 li:hover {
+    background-color: #858585;
+}
+.logout-button { /* Кнопка виходу */
+    color: white; /* Цвет тексту */
+    border: none; /* Без рамки */
+    padding: 10px 20px; /* Падінги */
+    border-radius: 4px; /* Центральний колір */
+    cursor: pointer; /* Підтримка курсора */
+    text-decoration: none; /* Без посилання */
+}
+.dropdown-menu1 button {
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.dropdown-menu1 button:hover {
+    color: #000;
+}
