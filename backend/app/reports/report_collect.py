@@ -66,18 +66,6 @@ def delete_report(student_name, task_number, course):
     except Exception as e:
         return {"error": str(e)}
     
-def count_tasks(student_name, course):
-    try:
-        task_count = reports_collection.count_documents({
-            "student_name": student_name,
-            "course": course
-        })
-
-        return (task_count+1)
-    except Exception as e:
-        return {"error": str(e)}
-    
-
 def download_reports(student_name, course):
     try:
         tasks = reports_collection.find({

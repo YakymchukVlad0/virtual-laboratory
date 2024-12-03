@@ -89,8 +89,6 @@ The complexity of the code is evaluated in: ${report.evaluation}/20
           {reports.map((report, index) => (
             <div key={index} className="task-card">
               <h3>{report.task_number} - {report.language}</h3>
-              <p><strong>Course:</strong> {report.course}</p>
-              <p><strong>Language:</strong> {report.language}</p>
               <div className="analysis">
                 <h4>General Comments:</h4>
                 <ul>
