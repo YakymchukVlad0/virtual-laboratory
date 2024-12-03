@@ -1,9 +1,9 @@
-import React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import Paper from '@mui/material/Paper';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
+import React from "react";
+import { DataGrid } from "@mui/x-data-grid";
+import Paper from "@mui/material/Paper";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
 
 const tabStyles = {
   "& .MuiTabs-flexContainer": {
@@ -19,6 +19,12 @@ const tabStyles = {
   },
 };
 
+const ensureUniqueIds = (rows, prefix = "row") =>
+  rows.map((row, index) => ({
+    ...row,
+    id: row.id ?? `${prefix}-${index}`, // Use existing ID or generate one
+  }));
+
 export default function UnifiedTables({ dataArray }) {
   const [activeTab, setActiveTab] = React.useState(0);
 
@@ -26,118 +32,201 @@ export default function UnifiedTables({ dataArray }) {
     setActiveTab(newValue);
   };
 
-  // Generate rows for each table
-  const errorsBySkillRows = Object.values(
-    dataArray.reduce((acc, task) => {
-      acc[task.SkillLevel] = acc[task.SkillLevel] || { id: task.SkillLevel, SkillLevel: task.SkillLevel, totalErrors: 0, count: 0 };
-      acc[task.SkillLevel].totalErrors += task.Errors;
-      acc[task.SkillLevel].count += 1;
-      return acc;
-    }, {})
-  ).map(entry => ({
-    id: entry.SkillLevel,
-    SkillLevel: entry.SkillLevel,
-    AverageErrors: (entry.totalErrors / entry.count).toFixed(2),
-  }));
+  const successRateRows = ensureUniqueIds(
+    dataArray.map((task, index) => ({
+      Task: `Task ${index + 1}`,
+      SuccessRate: ((task.TasksCompleted / (task.TasksCompleted + task.Errors)) * 100).toFixed(2) + "%",
+      FailureRate: ((task.Errors / (task.TasksCompleted + task.Errors)) * 100).toFixed(2) + "%",
+    })),
+    "success"
+  );
 
-  const completionRateRows = Object.values(
-    dataArray.reduce((acc, task) => {
-      acc[task.ProgrammingLanguage] = acc[task.ProgrammingLanguage] || { id: task.ProgrammingLanguage, total: 0, completed: 0 };
-      acc[task.ProgrammingLanguage].total += 1; // Assuming each task is a single row
-      acc[task.ProgrammingLanguage].completed += task.TasksCompleted;
-      return acc;
-    }, {})
-  ).map(entry => ({
-    id: entry.id,
-    ProgrammingLanguage: entry.id,
-    CompletionRate: ((entry.completed / entry.total) * 100).toFixed(2) + "%",
-  }));
+  const attemptsRows = ensureUniqueIds(
+    dataArray.map((task, index) => ({
+      Task: `Task ${index + 1}`,
+      Attempts: task.Attempts,
+    })),
+    "attempts"
+  );
 
-  const topErrorsRows = dataArray
-    .sort((a, b) => b.Errors - a.Errors)
-    .slice(0, 10)
-    .map((task, index) => ({
-      id: index + 1,
-      SkillLevel: task.SkillLevel,
+  const errorsRows = ensureUniqueIds(
+    dataArray.map((task, index) => ({
+      Task: `Task ${index + 1}`,
       Errors: task.Errors,
-      TaskCategory: task.TaskCategory,
-    }));
+    })),
+    "errors"
+  );
 
-  const avgTimeByCategoryRows = Object.values(
-    dataArray.reduce((acc, task) => {
-      acc[task.TaskCategory] = acc[task.TaskCategory] || { id: task.TaskCategory, totalTime: 0, count: 0 };
-      acc[task.TaskCategory].totalTime += parseFloat(task.TimeSpent);
-      acc[task.TaskCategory].count += 1;
-      return acc;
-    }, {})
-  ).map(entry => ({
-    id: entry.id,
-    TaskCategory: entry.id,
-    AvgTimeSpent: (entry.totalTime / entry.count).toFixed(2),
-  }));
+  const languageDistributionRows = ensureUniqueIds(
+    Object.values(
+      dataArray.reduce((acc, task) => {
+        acc[task.ProgrammingLanguage] = acc[task.ProgrammingLanguage] || { id: task.ProgrammingLanguage, Count: 0 };
+        acc[task.ProgrammingLanguage].Count += 1;
+        return acc;
+      }, {})
+    ),
+    "lang"
+  );
 
-  const missedDeadlineRows = dataArray
-    .filter(task => task.DeadlineStatus !== "on time")
-    .map((task, index) => ({
-      id: index + 1,
-      TaskCategory: task.TaskCategory,
-      Deadline: task.Deadline,
+  const timeSpentRows = ensureUniqueIds(
+    dataArray.map((task, index) => ({
+      Task: `Task ${index + 1}`,
       TimeSpent: task.TimeSpent,
-    }));
+    })),
+    "time"
+  );
 
-  // Column configurations for each table
-  const errorsBySkillColumns = [
-    { field: 'SkillLevel', headerName: 'Skill Level', width: 200 },
-    { field: 'AverageErrors', headerName: 'Average Errors', width: 200 },
-  ];
+  const deadlineStatusRows = ensureUniqueIds(
+    Object.values(
+      dataArray.reduce((acc, task) => {
+        acc[task.DeadlineStatus] = acc[task.DeadlineStatus] || { id: task.DeadlineStatus, Count: 0 };
+        acc[task.DeadlineStatus].Count += 1;
+        return acc;
+      }, {})
+    ),
+    "deadline"
+  );
 
-  const completionRateColumns = [
-    { field: 'ProgrammingLanguage', headerName: 'Programming Language', width: 200 },
-    { field: 'CompletionRate', headerName: 'Completion Rate (%)', width: 200 },
-  ];
+  const skillLevelRows = ensureUniqueIds(
+    Object.values(
+      dataArray.reduce((acc, task) => {
+        acc[task.SkillLevel] = acc[task.SkillLevel] || { id: task.SkillLevel, Count: 0 };
+        acc[task.SkillLevel].Count += 1;
+        return acc;
+      }, {})
+    ),
+    "skill"
+  );
 
-  const topErrorsColumns = [
-    { field: 'SkillLevel', headerName: 'Skill Level', width: 200 },
-    { field: 'Errors', headerName: 'Errors', type: 'number', width: 200 },
-    { field: 'TaskCategory', headerName: 'Task Category', width: 200 },
-  ];
+  const avgTimeCategoryRows = ensureUniqueIds(
+    Object.values(
+      dataArray.reduce((acc, task) => {
+        acc[task.TaskCategory] = acc[task.TaskCategory] || { id: task.TaskCategory, TotalTime: 0, Count: 0 };
+        acc[task.TaskCategory].TotalTime += parseFloat(task.TimeSpent);
+        acc[task.TaskCategory].Count += 1;
+        return acc;
+      }, {})
+    ).map(entry => ({
+      id: entry.id,
+      TaskCategory: entry.id,
+      AvgTimeSpent: (entry.TotalTime / entry.Count).toFixed(2),
+    })),
+    "avgTime"
+  );
 
-  const avgTimeByCategoryColumns = [
-    { field: 'TaskCategory', headerName: 'Task Category', width: 200 },
-    { field: 'AvgTimeSpent', headerName: 'Average Time Spent', width: 200 },
-  ];
+  const errorRateSkillRows = ensureUniqueIds(
+    Object.values(
+      dataArray.reduce((acc, task) => {
+        acc[task.SkillLevel] = acc[task.SkillLevel] || { id: task.SkillLevel, TotalErrors: 0, TaskCount: 0 };
+        acc[task.SkillLevel].TotalErrors += task.Errors;
+        acc[task.SkillLevel].TaskCount += 1;
+        return acc;
+      }, {})
+    ).map(entry => ({
+      id: entry.id,
+      SkillLevel: entry.id,
+      AvgErrorRate: (entry.TotalErrors / entry.TaskCount).toFixed(2),
+    })),
+    "errorRateSkill"
+  );
 
-  const missedDeadlineColumns = [
-    { field: 'TaskCategory', headerName: 'Task Category', width: 200 },
-    { field: 'Deadline', headerName: 'Deadline', width: 200 },
-    { field: 'TimeSpent', headerName: 'Time Spent', width: 200 },
-  ];
+  const completionTimeLanguageRows = ensureUniqueIds(
+    Object.values(
+      dataArray.reduce((acc, task) => {
+        acc[task.ProgrammingLanguage] = acc[task.ProgrammingLanguage] || { id: task.ProgrammingLanguage, TotalTime: 0, Count: 0 };
+        acc[task.ProgrammingLanguage].TotalTime += parseFloat(task.TimeSpent);
+        acc[task.ProgrammingLanguage].Count += 1;
+        return acc;
+      }, {})
+    ).map(entry => ({
+      id: entry.id,
+      Language: entry.id,
+      AvgCompletionTime: (entry.TotalTime / entry.Count).toFixed(2),
+    })),
+    "completionTimeLang"
+  );
 
   const tables = [
     {
-      label: "Errors by Skill Level",
-      rows: errorsBySkillRows,
-      columns: errorsBySkillColumns,
+      label: "Success Rate",
+      rows: successRateRows,
+      columns: [
+        { field: "Task", headerName: "Task" },
+        { field: "SuccessRate", headerName: "Success Rate", flex: 1 },
+        { field: "FailureRate", headerName: "Failure Rate", flex: 1 },
+      ],
     },
     {
-      label: "Completion Rate by Language",
-      rows: completionRateRows,
-      columns: completionRateColumns,
+      label: "Attempts",
+      rows: attemptsRows,
+      columns: [
+        { field: "Task", headerName: "Task" },
+        { field: "Attempts", headerName: "Attempts", flex: 1 },
+      ],
     },
     {
-      label: "Top Errors by Users",
-      rows: topErrorsRows,
-      columns: topErrorsColumns,
+      label: "Errors",
+      rows: errorsRows,
+      columns: [
+        { field: "Task", headerName: "Task" },
+        { field: "Errors", headerName: "Errors", flex: 1 },
+      ],
     },
     {
-      label: "Average Time by Task Category",
-      rows: avgTimeByCategoryRows,
-      columns: avgTimeByCategoryColumns,
+      label: "Language Distribution",
+      rows: languageDistributionRows,
+      columns: [
+        { field: "id", headerName: "Programming Language" },
+        { field: "Count", headerName: "Count", flex: 1 },
+      ],
     },
     {
-      label: "Missed Deadlines",
-      rows: missedDeadlineRows,
-      columns: missedDeadlineColumns,
+      label: "Time Spent",
+      rows: timeSpentRows,
+      columns: [
+        { field: "Task", headerName: "Task" },
+        { field: "TimeSpent", headerName: "Time Spent", flex: 1 },
+      ],
+    },
+    {
+      label: "Deadline Status",
+      rows: deadlineStatusRows,
+      columns: [
+        { field: "id", headerName: "Deadline Status" },
+        { field: "Count", headerName: "Count", flex: 1 },
+      ],
+    },
+    {
+      label: "Skill Level",
+      rows: skillLevelRows,
+      columns: [
+        { field: "id", headerName: "Skill Level" },
+        { field: "Count", headerName: "Count", flex: 1 },
+      ],
+    },
+    {
+      label: "Avg Time by Task Category",
+      rows: avgTimeCategoryRows,
+      columns: [
+        { field: "TaskCategory", headerName: "Task Category" },
+        { field: "AvgTimeSpent", headerName: "Avg Time Spent", flex: 1 },
+      ],
+    },
+    {
+      label: "Error Rate by Skill Level",
+      rows: errorRateSkillRows,
+      columns: [
+        { field: "SkillLevel", headerName: "Skill Level" },
+        { field: "AvgErrorRate", headerName: "Avg Error Rate", flex: 1 },
+      ],
+    },
+    {
+      label: "Avg Completion Time by Language",
+      rows: completionTimeLanguageRows,
+      columns: [
+        { field: "Language", headerName: "Programming Language" },
+        { field: "AvgCompletionTime", headerName: "Avg Completion Time", flex: 1 },
+      ],
     },
   ];
 
@@ -151,24 +240,12 @@ export default function UnifiedTables({ dataArray }) {
       <Box sx={{ padding: 2 }}>
         {tables.map((table, index) => (
           <Box key={index} hidden={activeTab !== index}>
-            <Paper className="dark-theme-table" sx={{ height: 400, width: '100%' }}>
+            <Paper sx={{ height: 400, width: "100%" }}>
               <DataGrid
                 rows={table.rows}
                 columns={table.columns}
                 pageSizeOptions={[5, 10]}
                 checkboxSelection
-                sx={{
-                  border: 0,
-                  color: "#dddddd",
-                  "& .MuiDataGrid-columnHeaders": {
-                    backgroundColor: "#333333",
-                    color: "#ffcc00",
-                    fontWeight: "bold",
-                  },
-                  "& .MuiDataGrid-cell": {
-                    color: "#dddddd",
-                  },
-                }}
               />
             </Paper>
           </Box>

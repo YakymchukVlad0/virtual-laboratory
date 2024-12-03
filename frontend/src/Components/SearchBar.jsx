@@ -5,6 +5,16 @@ import "../Styles/SearchBar.css";
 
 export const SearchBar = ({ setResults }) => {
   const [input, setInput] = useState("");
+  const styleObject = {
+    backgroundColor: 'transparent',
+    border: 'none',
+    height: '100%',
+    fontSize: '1.25rem',
+    width: '100%',
+    marginLeft: '5px',
+    color: '#333',
+    marginTop: '0px',
+  };
 
   const fetchData = (value) => {
     const results = data.filter((task)=>{
@@ -41,6 +51,7 @@ export const SearchBar = ({ setResults }) => {
     <div className="input-wrapper">
       <FaSearch id="search-icon" />
       <input
+        style={styleObject}
         placeholder="Type to search..."
         value={input}
         onChange={(e) => handleChange(e.target.value)}

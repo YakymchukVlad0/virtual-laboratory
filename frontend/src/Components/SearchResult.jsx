@@ -1,59 +1,48 @@
 import "../Styles/SearchResult.css";
-import {Modal, Form, FormGroup, FormLabel} from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { Modal, Form, FormGroup, FormLabel } from "react-bootstrap";
+import { useState } from "react";
 
-export const SearchResult = ({ result  }) => {
-  const [isTaskInfo, setIsTaskInfo] = useState(false) 
-  const handleCloseTaskInfo = ()=>{
-    setIsTaskInfo(false)
-    console.log(isTaskInfo);
-    console.log(result);
+export const SearchResult = ({ result, tasks }) => {
+  const [isTaskInfo, setIsTaskInfo] = useState(false);
+
+  const handleCloseTaskInfo = () => {
+    setIsTaskInfo(false);
   };
-  const [selectedTask, setSelectedTask] = useState(null);
-  useEffect(()=>{
-    const handleTaskSearch = async (taskName)=>{
-      console.log(taskName)
-      setSelectedTask({
-        id : 2,
-        name: "Task 1",
-        totalTasks: 10,
-        code: "for (let i = 0; i < 10; i++) { console.log(i); }",
-        completedTasks: 8,
-        attempts: 12,
-        errors: 3,
-        successRate: 80,
-        timeSpent: "5 hours",
-        deadlines: ["2024-11-01", "2024-11-02", "2024-11-03"],
-        programmingLanguage: "Python"
-    })
-    }
+  console.log(tasks);
 
-    handleTaskSearch(result);
-    console.log(selectedTask);
+  const findTask = (taskName) => {
+    return tasks.find((task) => task.TaskName === taskName) || {};
+  };
 
-  },[selectedTask,result])
-  
+  const selectedTask = findTask(result);
+
   return (
     <div
       className="search-result"
-      onClick={()=>{setIsTaskInfo(!isTaskInfo)}}
+      onClick={() => {
+        setIsTaskInfo(!isTaskInfo);
+      }}
     >
       {result}
-      <Modal show={isTaskInfo} onHide={handleCloseTaskInfo}>
-                <Modal.Header closeButton>
-                    <Modal.Title>{result}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form >
-                    <FormGroup>
-                        
-                        <FormLabel>{result}</FormLabel>
-                           
-                    </FormGroup>
-
-                    </Form>
-                </Modal.Body>
-            </Modal>
+      <Modal
+        show={isTaskInfo}
+        onHide={handleCloseTaskInfo}
+        dialogClassName="custom-modal"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>{selectedTask.TaskName || "Task Details"}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form className="form-info">
+            {Object.entries(selectedTask).map(([key, value]) => (
+              <FormGroup key={key}>
+                <FormLabel>{key.replace(/([A-Z])/g, " $1")}:</FormLabel>
+                <p>{value || "N/A"}</p>
+              </FormGroup>
+            ))}
+          </Form>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };

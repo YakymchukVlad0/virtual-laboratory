@@ -19,14 +19,14 @@ import {
   Legend,
   ResponsiveContainer,
   ScatterChart,
-  Scatter
+  Scatter,
+  ComposedChart
 } from "recharts";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8", "#FF6361"];
 
 const DiagramFormat = ({ dataArray }) => {
   const taskData = dataArray;
-
   // Success Rate Data
   const successRateData = taskData.map(task => ({
     name: `Task ${taskData.indexOf(task) + 1}`,
@@ -55,18 +55,9 @@ const DiagramFormat = ({ dataArray }) => {
     }, {})
   );
 
-  // Error Types Distribution
-  const errorTypesCount = taskData.reduce((acc, task) => {
-    task.ErrorTypes.forEach(errorType => {
-      acc[errorType] = (acc[errorType] || 0) + 1;
-    });
-    return acc;
-  }, {});
 
-  const errorTypeData = Object.entries(errorTypesCount).map(([errorType, count]) => ({
-    name: errorType,
-    count,
-  }));
+
+
 
   // Time Spent Per Task
   const timeSpentData = taskData.map((task, index) => ({
@@ -126,6 +117,59 @@ const DiagramFormat = ({ dataArray }) => {
       timeSpent: parseFloat(task.TimeSpent),
       attempts: task.Attempts,
     }));
+
+
+      // Task Categories Distribution
+  const categoryDistribution = Object.values(
+    taskData.reduce((acc, task) => {
+      acc[task.TaskCategory] = acc[task.TaskCategory] || { category: task.TaskCategory, count: 0 };
+      acc[task.TaskCategory].count += 1;
+      return acc;
+    }, {})
+  );
+
+  // Completion Time vs. Programming Language
+  const completionTimeLanguageData = Object.values(
+    taskData.reduce((acc, task) => {
+      acc[task.ProgrammingLanguage] = acc[task.ProgrammingLanguage] || {
+        language: task.ProgrammingLanguage,
+        totalCompletionTime: 0,
+        taskCount: 0
+      };
+      acc[task.ProgrammingLanguage].totalCompletionTime += parseFloat(task.AverageCompletionTime);
+      acc[task.ProgrammingLanguage].taskCount += 1;
+      return acc;
+    }, {})
+  ).map(entry => ({
+    language: entry.language,
+    avgCompletionTime: (entry.totalCompletionTime / entry.taskCount).toFixed(2),
+  }));
+
+  // Tasks and Errors Comparison
+  const tasksErrorsComparison = taskData.map((task, index) => ({
+    name: `Task ${index + 1}`,
+    completed: task.TasksCompleted,
+    errors: task.Errors,
+  }));
+
+  // Completion Time Heatmap
+  const heatmapData = taskData.map((task, index) => ({
+    name: `Task ${index + 1}`,
+    timeSpent: parseFloat(task.AverageCompletionTime),
+  }));
+
+  // Error Percentage by Deadline Status
+  const errorByDeadlineStatus = Object.values(
+    taskData.reduce((acc, task) => {
+      acc[task.DeadlineStatus] = acc[task.DeadlineStatus] || { status: task.DeadlineStatus, totalErrors: 0, totalTasks: 0 };
+      acc[task.DeadlineStatus].totalErrors += task.Errors;
+      acc[task.DeadlineStatus].totalTasks += task.TasksCompleted + task.Errors;
+      return acc;
+    }, {})
+  ).map(entry => ({
+    status: entry.status,
+    errorPercentage: ((entry.totalErrors / entry.totalTasks) * 100).toFixed(2),
+  }));
 
   return (
     <div>
@@ -192,19 +236,6 @@ const DiagramFormat = ({ dataArray }) => {
             ))}
           </Pie>
         </PieChart>
-      </ResponsiveContainer>
-
-      {/* Error Types */}
-      <h3>Error Types</h3>
-      <ResponsiveContainer width="100%" height={300}>
-        <RadarChart outerRadius={150} data={errorTypeData}>
-          <PolarGrid />
-          <PolarAngleAxis dataKey="name" />
-          <PolarRadiusAxis />
-          <Radar name="Error Types" dataKey="count" stroke="#FF8042" fill="#FF8042" fillOpacity={0.6} />
-          <Legend />
-          <Tooltip />
-        </RadarChart>
       </ResponsiveContainer>
 
       {/* Time Spent Per Task */}
@@ -304,6 +335,72 @@ const DiagramFormat = ({ dataArray }) => {
           <Legend />
           <Scatter name="Time vs. Attempts" data={timeAttemptsData} fill="#0088FE" />
         </ScatterChart>
+      </ResponsiveContainer>
+
+        {/* Task Categories Distribution */}
+        <h3>Task Categories Distribution</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <RadarChart data={categoryDistribution}>
+          <PolarGrid />
+          <PolarAngleAxis dataKey="category" />
+          <PolarRadiusAxis angle={30} />
+          <Radar name="Tasks" dataKey="count" fill="#0088FE" fillOpacity={0.6} />
+          <Tooltip />
+          <Legend />
+        </RadarChart>
+      </ResponsiveContainer>
+
+      {/* Completion Time vs. Programming Language */}
+      <h3>Completion Time vs. Programming Language</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={completionTimeLanguageData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="language" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey="avgCompletionTime" stroke="#FF8042" />
+        </LineChart>
+      </ResponsiveContainer>
+
+      {/* Tasks and Errors Comparison */}
+      <h3>Tasks and Errors Comparison</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <ComposedChart data={tasksErrorsComparison}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="completed" fill="#00C49F" />
+          <Line type="monotone" dataKey="errors" stroke="#FF8042" />
+        </ComposedChart>
+      </ResponsiveContainer>
+
+      {/* Completion Time Heatmap */}
+      <h3>Completion Time Heatmap</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <ScatterChart>
+          <CartesianGrid />
+          <XAxis type="category" dataKey="name" />
+          <YAxis dataKey="timeSpent" />
+          <Tooltip />
+          <Legend />
+          <Scatter name="Time Spent" data={heatmapData} fill="#8884D8" />
+        </ScatterChart>
+      </ResponsiveContainer>
+
+      {/* Error Percentage by Deadline Status */}
+      <h3>Error Percentage by Deadline Status</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={errorByDeadlineStatus}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="status" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="errorPercentage" fill="#FFBB28" />
+        </BarChart>
       </ResponsiveContainer>
     </div>
   );

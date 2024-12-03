@@ -12,3 +12,63 @@
 .search-result:active {
   background-color: #dcdcdc; /* Highlight when clicked */
 }
+
+/* Custom styles for the modal */
+.custom-modal .modal-dialog {
+  max-width: 700px; /* Make the modal wider */
+  width: 100%;
+}
+
+.custom-modal .modal-header {
+  background-color: #333;
+  color: #fff;
+  border-bottom: 2px solid #007bff;
+}
+
+.custom-modal .modal-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.custom-modal .modal-body {
+  background-color: #f9f9f9;
+  padding: 20px;
+  color: #333;
+}
+
+.custom-modal .form-label {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #555;
+}
+
+.custom-modal p {
+  margin: 0;
+  padding: 5px 0;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.custom-modal .modal-body .form-group {
+  margin-bottom: 15px;
+}
+
+.modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 1000px;
+  color: var(--bs-modal-color);
+  pointer-events: auto;
+  background-color: var(--bs-modal-bg);
+  background-clip: padding-box;
+  border: var(--bs-modal-border-width) solid var(--bs-modal-border-color);
+  border-radius: var(--bs-modal-border-radius);
+  outline: 0;
+}
+
+.form-info {
+  margin-left: 10px;
+  width: 98%;
+  background-color:  #f7f6f6;;
+}
