@@ -6,13 +6,16 @@
 
 .filters {
     display: flex;
-    gap: 10px;
+    gap: 4%;
     margin-bottom: 20px;
+    margin-left: 50px;
 }
 
 .filters select {
     padding: 5px;
     font-size: 14px;
+    background-color: #cfcfcf;
+    border: 1px solid #ccc;
 }
 
 .leaderboard-table {

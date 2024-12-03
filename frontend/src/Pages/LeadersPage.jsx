@@ -56,13 +56,21 @@ const LeaderboardPage = () => {
     };
 
     const getTotalTasksCompleted = (tasks) => {
-        let totalTasks = 0;
-        if (Array.isArray(tasks)) {
-            tasks.forEach((task) => {
-                totalTasks += task.TasksCompleted || 0; // Перевірка на NaN
-            });
+        if (!Array.isArray(tasks)) {
+            return 0;
         }
-        return totalTasks;
+    
+        const completedTasks = tasks.filter((task) => {
+            if (!task.hasOwnProperty('TasksCompleted')) {
+                console.warn("Task missing tasksCompleted field:", task);
+                return false;
+            }
+            const completed = Number(task.TasksCompleted);
+            return completed > 0;
+        });
+    
+        console.log("Filtered completed tasks:", completedTasks);
+        return completedTasks.length;
     };
     
     const getTotalErrors = (tasks) => {
@@ -196,6 +204,7 @@ const LeaderboardPage = () => {
                         <th>Name</th>
                         <th>Group</th>
                         <th>Course</th>
+                        <th>Tasks Completed</th>
                         <th onClick={() => sortTable('Attempts') }>Attempts</th>
                         <th onClick={() => sortTable('Errors') }>Errors</th>
                         <th onClick={() => sortTable('PercentageScore') }>Percentage Score</th>
@@ -212,7 +221,7 @@ const LeaderboardPage = () => {
                         .map((student, index) => {
                             const isAuthUser = student.name === authUsername; // Перевірка по username
                             const avgScore = getAverage(student.tasks, "PercentageScore");
-                            //const totalTasksCompleted = getTotalTasksCompleted(student.tasks);
+                            const totalTasksCompleted = getTotalTasksCompleted(student.tasks);
                             const totalTimeSpent = getTotalTimeSpent(student.tasks);
                             const totalAttemps = getTotalAttemps(student.tasks); // Оновлення функції для getTotalAttemps
                             const totalErrors = getTotalErrors(student.tasks);
@@ -223,10 +232,11 @@ const LeaderboardPage = () => {
                                     <td>{student.name}</td>
                                     <td>{student.group}</td>
                                     <td>{student.courses[0]?.course_name}</td>
+                                    <td>{totalTasksCompleted}</td>
                                     <td>{totalAttemps}</td>
                                     <td>{totalErrors}</td>
                                     <td>{avgScore ? avgScore.toFixed(2) + "%" : "N/A"}</td>
-                                    <td>{totalTimeSpent ? totalTimeSpent.toFixed(2) + " hours" : "N/A"}</td>
+                                    <td>{totalTimeSpent ? totalTimeSpent.toFixed(2) : "N/A"}</td>
                                 </tr>
                             );
                         })}

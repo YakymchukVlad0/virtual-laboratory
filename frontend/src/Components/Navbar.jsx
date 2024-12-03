@@ -18,7 +18,7 @@ const Navbar = () => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
     }
-};
+  };
 
 useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
@@ -48,16 +48,22 @@ useEffect(() => {
           <li><NavLink to="/export">Designing</NavLink></li>
         </ul>
         <div className="user-info" onClick={toggleDropdown} ref={dropdownRef}>
-            <img src={userLogo} alt="user" />
+            <img src={userLogo} alt="user" style={{
+            width: '40px', 
+            height: '40px', 
+            borderRadius: '50%',
+            
+            marginRight: '10px', // Відступ між логотипом і ім'ям
+        }} />
             {/* Відображаємо ім'я користувача, якщо авторизовано */}
-            <p>{auth ? auth.username : 'Student Username'}</p>
+            <p style={{paddingRight: '20px', marginTop: '15px', marginLeft: '0px'}}>{auth ? auth.username : 'Student Username'}</p>
             {/* Меню випадає залежно від стану авторизації */}
             {isDropdownOpen && (
-                <ul className="dropdown-menu">
+                <ul className={`dropdown-menu1 ${isDropdownOpen ? 'open' : ''}`}>
                     {auth ? (
                         <>
-                            <li><NavLink to="/profile">Profile</NavLink></li>
-                            <li><button onClick={handleLogout}>Logout</button></li>
+                            <li><NavLink to="/profile" style={{fontSize: '19px', color: 'white', border: '1px', fontWeight: 'bold', textDecoration: 'none'}}>Profile</NavLink></li>
+                            <li><button className='logout-button' onClick={handleLogout} style={{marginTop: '-50px', marginBottom: '-50px', marginLeft: '-57px', fontSize: '19px', color: 'white', border: '1px', height: '50px'}}>Logout</button></li>
                         </>
                     ) : (
                         <li><NavLink to="/login">Login</NavLink></li>
