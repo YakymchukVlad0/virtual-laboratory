@@ -32,7 +32,7 @@ users_collection = db["users"]
 activities_collection = db["users_activity"]
 SECRET_KEY = "mysecretkey"  # Для реальних проектів використовуйте більш складний ключ
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 # Створення хешованого пароля
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
