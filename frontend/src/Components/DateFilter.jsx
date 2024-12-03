@@ -95,7 +95,7 @@ const DateFilter = ({ setDateRange }) => {
 
             {isOpen && (
                 <div className="dropdown" ref={modalRef}>
-                    <div className="dropdown-content">
+                    <div className="dropdown-content" style={{ position: 'relative', width: '400px',marginLeft: '50%', display: 'flex', alignItems: 'flex-end', flexWrap: 'wrap'}}>
                         <h3>Select Date Range</h3>
 
                         {/* Поля введення дат */}
@@ -123,6 +123,7 @@ const DateFilter = ({ setDateRange }) => {
                         {/* Швидкий вибір періоду */}
                         <div className="calendar">
                             <label>Quick Select</label>
+                            <div>
                             <div>
                                 <input
                                     type="radio"
@@ -156,6 +157,8 @@ const DateFilter = ({ setDateRange }) => {
                                 />
                                 <label htmlFor="last3months">Last 3 months</label>
                             </div>
+                            </div>
+                            <div>
                             <div>
                                 <input
                                     type="radio"
@@ -189,6 +192,7 @@ const DateFilter = ({ setDateRange }) => {
                                 />
                                 <label htmlFor="custom">Custom Range</label>
                             </div>
+                            </div>
                         </div>
 
                         {/* Помилка валідації */}
@@ -196,8 +200,8 @@ const DateFilter = ({ setDateRange }) => {
 
                         {/* Кнопки */}
                         <div className="buttons">
-                            <button onClick={applyFilter}>Apply</button>
-                            <button onClick={toggleModal}>Cancel</button>
+                            <button style={{marginLeft: '35px', width: '130px'}} onClick={applyFilter}>Apply</button>
+                            <button style={{marginLeft: '0px', width: '130px'}} onClick={toggleModal}>Cancel</button>
                         </div>
                     </div>
                 </div>
