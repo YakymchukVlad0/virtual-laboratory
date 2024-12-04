@@ -31,7 +31,7 @@ const StatisticsPage = () => {
     position: "absolute",
     zIndex: 1,
     width: "400px",
-    top: "22%",
+    top: "23%",
     left: "unset",
     marginTop: "0px",
     height: "0px",
@@ -65,8 +65,29 @@ const StatisticsPage = () => {
           },
         }
       );
-      setAllTasks(response.data.tasks);
-      setTasks(response.data.tasks); // Initialize tasks with all tasks
+      const tempTasks = response.data.tasks;
+      for(let i =0;i<tempTasks.length;i++){
+        if(!tempTasks[i].ProgrammingLanguage){
+          
+          tempTasks[i].ProgrammingLanguage = 'N/A';
+        }
+
+        if(!tempTasks[i].TaskCategory){
+          
+          tempTasks[i].TaskCategory = 'N/A';
+        }
+        if(!tempTasks[i].DeadlineStatus){
+          
+          tempTasks[i].DeadlineStatus= 'missed deadline';
+        }
+        if(!tempTasks[i].SkillLevel){
+          
+          tempTasks[i].SkillLevel = 'N/A';
+        }
+      }
+      
+      setAllTasks(tempTasks);
+      setTasks(tempTasks); // Initialize tasks with all tasks
     } catch (error) {
       console.error("Error fetching activity stats:", error);
       alert(
@@ -112,23 +133,62 @@ const StatisticsPage = () => {
     }));
   };
 
-  const handleRadioChange = (event) => {
-    const value = event.target.value;
-    setSelectedRadio(value);
-
-    let sortedTasks = [...tasks];
-    if (value === "language") {
-      sortedTasks.sort((a, b) => a.ProgrammingLanguage.localeCompare(b.ProgrammingLanguage));
-    } else if (value === "deadline_status") {
-      sortedTasks.sort((a, b) => a.DeadlineStatus.localeCompare(b.DeadlineStatus));
-    } else if (value === "level") {
-      sortedTasks = sortedTasks.sort((a, b) => {
-        const levels = { beginner: 1, intermediate: 2, advanced: 3 };
-        return levels[a.SkillLevel] - levels[b.SkillLevel];
-      });
+   const handleRadioChange = (event) => {
+    setSelectedRadio(event.target.value);
+    console.log(selectedRadio);
+    if(event.target.value === 'language'){
+      tasks.sort(sortLanguage);
+    }else if(event.target.value === 'deadline_status'){
+      tasks.sort(sortDeadline);
+    }else if(event.target.value === 'level'){
+      sortLevel();
     }
-    setTasks(sortedTasks);
+    console.log(tasks);
   };
+
+  const sortLanguage = (a,b)=>{
+    if(a.ProgrammingLanguage < b.ProgrammingLanguage){
+      return -1;
+    }else if (a.ProgrammingLanguage === b.ProgrammingLanguage) {
+      return 0;
+    } else {
+      return 1;
+    }
+    
+  }
+
+  const sortDeadline = (a,b)=>{
+    if(a.DeadlineStatus < b.DeadlineStatus){
+      return -1;
+    }else if (a.DeadlineStatus === b.DeadlineStatus) {
+      return 0;
+    } else {
+      return 1;
+    }
+    
+  }
+
+  const sortLevel = ()=>{
+    let sorted = [];
+    for(let i = 0; i<tasks.length; i++){
+        if(tasks[i].SkillLevel === 'beginner'){
+          sorted.push(tasks[i]);
+        }
+    }
+    for(let i = 0; i<tasks.length; i++){
+      if(tasks[i].SkillLevel === 'intermediate'){
+        sorted.push(tasks[i]);
+      }
+    }
+
+    for(let i = 0; i<tasks.length; i++){
+      if(tasks[i].SkillLevel === 'advanced'){
+       sorted.push(tasks[i]);
+      }
+    }
+    console.log(sorted);
+    setTasks(sorted);
+  }
 
   const handleSwitchChange = (event) => {
     setIsTableFormat(event.target.checked);
