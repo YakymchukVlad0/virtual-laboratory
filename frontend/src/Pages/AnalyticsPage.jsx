@@ -2,12 +2,15 @@ import EventsNavigation from "../Components/EventsNavigation";
 import "../Styles/Analytics.css";
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 import { useAuth } from '../Contexts/AuthContext';
 
 const AnalyticsPage = () => {
   const { auth } = useAuth();
   const [reports, setReports] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!auth || !auth.username) return; // Ensure auth and username are available
@@ -18,6 +21,7 @@ const AnalyticsPage = () => {
           params: { username: auth.username } // Send username to the server
         });
         console.log(response.data); // Log the server response
+        setIsLoading(false);
         setReports(response.data.reports); // Save the response data
       } catch (error) {
         console.error('Error fetching reports:', error);
@@ -85,6 +89,13 @@ The complexity of the code is evaluated in: ${report.evaluation}/20
       <EventsNavigation />
       <div className="task-analytics">
         <h2>Task Analytics</h2>
+        {isLoading && 
+        <div className="loading-circle" style={{display:'flex',alignContent:'center', alignItems:'center'}}>
+          <Box sx={{ display: 'flex',alignContent:'center', alignItems:'center' }}>
+          <CircularProgress size="3rem" />
+          </Box>
+          </div>
+        }
         <div className="task-list">
           {reports.map((report, index) => (
             <div key={index} className="task-card">
