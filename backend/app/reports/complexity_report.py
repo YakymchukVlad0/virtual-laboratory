@@ -6,13 +6,13 @@ from .openAI import GenerateReport
 import re
 import sys
 import os
-from .report_collect import upload_report, check_ready_report, delete_report, count_tasks
+from .report_collect import upload_report, check_ready_report, delete_report
 
 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
 
-from backend.app.routers.router import get_task_code, get_language
+from backend.app.routers.router import get_task_code, get_language, count_tasks
 
 
 
@@ -48,11 +48,13 @@ def AnalyzeCodeComplexity(code):
         # Ініціалізація масиву
         report = {}
 
-
         # 0: Complexity Rating
         complexity_match = re.search(r"Complexity Rating.*?:\s*(\d+)", blocks[0].replace("*", ""))
         if complexity_match:
-            report["evaluation"] = int(complexity_match.group(1))  # Додаємо складність як число
+            # Видаляємо зайві символи навколо числа
+            complexity_rating = complexity_match.group(1)
+            complexity_rating = re.sub(r"[^\d]", "", complexity_rating)  # Видаляємо все, окрім цифр
+            report["evaluation"] = int(complexity_rating)  # Додаємо складність як число
         else:
             report["evaluation"] = "N/A"
 
@@ -64,7 +66,10 @@ def AnalyzeCodeComplexity(code):
             for line in statistics_lines:
                 match = re.search(r"-\s*(.*?):\s*(\d+)", line.strip())
                 if match:
-                    statistics[match.group(1)] = int(match.group(2))  # Зберігаємо статистику як числа
+                    # Очищаємо число від зайвих символів
+                    stat_value = match.group(2)
+                    stat_value = re.sub(r"[^\d]", "", stat_value)  # Видаляємо все, окрім цифр
+                    statistics[match.group(1)] = int(stat_value)  # Зберігаємо статистику як числа
         report["statistics"] = statistics
 
         # 2: Notes
@@ -72,7 +77,8 @@ def AnalyzeCodeComplexity(code):
         if len(blocks) > 2:
             notes_lines = blocks[2].split('\n')[1:]  # Пропускаємо перший рядок (заголовок)
             for line in notes_lines:
-                notes.append(line.strip().replace("**", ""))
+                cleaned_line = line.strip().replace("**", "").lstrip("- ")  # Видаляємо "- " з початку рядка
+                notes.append(cleaned_line)
         report["notes"] = notes
 
         # 3: General Comments
@@ -80,10 +86,12 @@ def AnalyzeCodeComplexity(code):
         if len(blocks) > 3:
             general_comment_lines = blocks[3].split('\n')[1:]  # Пропускаємо перший рядок (заголовок)
             for line in general_comment_lines:
-                general_comments.append(line.strip().replace("**", ""))
+                cleaned_line = line.strip().replace("**", "").lstrip("- ")  # Видаляємо "- " з початку рядка
+                general_comments.append(cleaned_line)
         report["general_comment"] = general_comments
         print(report)
         return report
+
 
     except Exception as e:
         return {"error": str(e)}
@@ -179,22 +187,25 @@ def create_pdf(report, student_group, task_number, output_filename="code_complex
 
 
 def create_reports_for_student(StudentName, CourseName):
-
-    for number in range(0, (count_tasks(StudentName, CourseName))):
+    total_tasks = count_tasks(StudentName, CourseName)
+    print(f"Total tasks: {total_tasks}")
+    for number in range(0, total_tasks):
         task_number = f"Task {number + 1}"
+        print(f"Processing {task_number}")
         if check_ready_report(StudentName, task_number, CourseName):
             print("Звіт для цього коду вже існує")
             continue
  
         code = get_task_code(StudentName, CourseName, task_number)
+        print(f"Code for {task_number}: {code}")
         language = get_language(StudentName, CourseName, task_number)
 
         if code != "None":
             report = AnalyzeCodeComplexity(code)
-
             upload_report(StudentName, task_number, CourseName, report, language)
         else:
             print(f"Немає коду для {task_number}")
+
 
 
 def refresh_report(StudentName, task_number, CourseName):
@@ -211,3 +222,5 @@ def refresh_report(StudentName, task_number, CourseName):
         upload_report(StudentName, task_number, CourseName, report, language)
     else:
         print(f"Немає коду для {task_number}")
+
+create_reports_for_student("Oleksandr Vasyliv", "Developing")

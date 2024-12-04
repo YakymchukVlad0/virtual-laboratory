@@ -1,5 +1,5 @@
 import EventsNavigation from "../Components/EventsNavigation";
-import "../Styles/Analytics.css"
+import "../Styles/Analytics.css";
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 
@@ -27,7 +27,7 @@ const AnalyticsPage = () => {
     fetchReports();
   }, [auth]);
 
-  const downloadReport = async (report) => {
+  const downloadReportAsPDF = async (report) => {
     try {
       const response = await axios.post('http://localhost:8000/analytics/download', {
         username: auth.username, // Send the username
@@ -36,20 +36,48 @@ const AnalyticsPage = () => {
         responseType: 'blob', // Indicate that we expect a PDF file (blob data)
       });
 
-      // Create a Blob from the response and generate a URL
       const blob = new Blob([response.data], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
 
-      // Create a temporary anchor element to trigger the download
       const link = document.createElement('a');
       link.href = url;
-      link.download = `${report.task_number}_report.pdf`; // Set the filename for download
-      link.click(); // Trigger the download
-      URL.revokeObjectURL(url); // Clean up the Blob URL after download
-
+      link.download = `${report.task_number}_report.pdf`;
+      link.click();
+      URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Error downloading the report:', error);
+      console.error('Error downloading the report as PDF:', error);
     }
+  };
+
+  const downloadReportAsTXT = (report) => {
+    const content = `Task Number: ${report.task_number}
+Language: ${report.language}
+Course: ${report.course}
+
+General Comments:
+${report.general_comment.map((comment) => `${comment}`).join('\n')}
+
+Notes:
+${report.notes.map((note) => `${note}`).join('\n')}
+
+Statistics:
+- Number of conditions: ${report.statistics["Number of conditions"]}
+- Number of function duplications: ${report.statistics["Number of function duplications"]}
+- Number of loops: ${report.statistics["Number of loops"]}
+- Number of redundant operators: ${report.statistics["Number of redundant operators"]}
+
+Evaluation:
+The complexity of the code is evaluated in: ${report.evaluation}/20
+`;
+
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${report.task_number}_report.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -61,8 +89,6 @@ const AnalyticsPage = () => {
           {reports.map((report, index) => (
             <div key={index} className="task-card">
               <h3>{report.task_number} - {report.language}</h3>
-              <p><strong>Course:</strong> {report.course}</p>
-              <p><strong>Language:</strong> {report.language}</p>
               <div className="analysis">
                 <h4>General Comments:</h4>
                 <ul>
@@ -86,13 +112,14 @@ const AnalyticsPage = () => {
                 <h4>Evaluate:</h4>
                 <p>The complexity of the code is evaluated in: <strong>{report.evaluation}/20 </strong></p>
               </div>
-              <button onClick={() => downloadReport(report)} className="download-btn">Download</button>
+              <button onClick={() => downloadReportAsPDF(report)} className="download-btn">Download as PDF</button>
+              <button onClick={() => downloadReportAsTXT(report)} className="download-btn">Download as TXT</button>
             </div>
           ))}
         </div>
       </div>
     </>
   );
-}
+};
 
 export default AnalyticsPage;

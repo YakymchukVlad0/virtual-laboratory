@@ -248,3 +248,22 @@ def get_language(student_name: str, course_name: str, TaskName: str):
         raise HTTPException(status_code=404, detail="Task not found for the student")
     
     return task.get("ProgrammingLanguage", "No ProgrammingLanguage Available")
+
+
+
+def count_tasks(student_name, course):
+    try:
+        student = students_collection.find_one({
+            "name": student_name,
+            "courses.course_name": course
+        })
+
+        if student:
+            for c in student['courses']:
+                if c['course_name'] == course:
+                    task_count = len(c['tasks'])
+                    return task_count
+        return {"error": "Студент або курс не знайдені"}
+
+    except Exception as e:
+        return {"error": str(e)}
