@@ -17,7 +17,7 @@ const ProfilePage = () => {
                                             width="150"
                                         />
                                         <div className="mt-3">
-                                            <h4>John Doe</h4>
+                                            <h4>Oleksandr Vasyliv</h4>
                                             <p className="text-secondary mb-1">Programming engineer student</p>
                                             <p className="text-muted font-size-sm">Lviv, Ukraine</p>
                                             <button className="btn btn-outline-primary">Message</button>
@@ -49,7 +49,7 @@ const ProfilePage = () => {
                                             <h6 className="mb-0">Full Name</h6>
                                         </div>
                                         <div className="col-sm-9 text-secondary">
-                                            <input type="text" className="form-control" value="John Doe" />
+                                            <input type="text" className="form-control" value="Oleksandr Vasyliv" />
                                         </div>
                                     </div>
                                     <div className="row mb-3">
@@ -57,7 +57,7 @@ const ProfilePage = () => {
                                             <h6 className="mb-0">Email</h6>
                                         </div>
                                         <div className="col-sm-9 text-secondary">
-                                            <input type="text" className="form-control" value="john@example.com" />
+                                            <input type="text" className="form-control" value="vasyliv77@gmail.com" />
                                         </div>
                                     </div>
                                     <div className="row mb-3">
