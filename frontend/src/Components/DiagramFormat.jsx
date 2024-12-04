@@ -83,13 +83,7 @@ const DiagramFormat = ({ dataArray }) => {
     }, {})
   );
 
-  // Average Completion Time By Category
-  const averageCompletionTime = taskData.map(task => ({
-    category: task.TaskCategory,
-    avgCompletionTime: parseFloat(task.AverageCompletionTime),
-  }));
-
-    // Error Rate vs. Skill Level Data
+  // Error Rate vs. Skill Level Data
     const errorRateSkillData = Object.values(
       taskData.reduce((acc, task) => {
         acc[task.SkillLevel] = acc[task.SkillLevel] || { skill: task.SkillLevel, totalErrors: 0, taskCount: 0 };
@@ -173,8 +167,6 @@ const DiagramFormat = ({ dataArray }) => {
 
   return (
     <div>
-      <h2>Statistics Diagrams</h2>
-
       {/* Success Rate */}
       <h3>Success Rate</h3>
       <ResponsiveContainer width="100%" height={300}>
