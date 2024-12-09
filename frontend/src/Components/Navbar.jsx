@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../Contexts/AuthContext';
 import '../Styles/Navbar.css';
-import userLogo from '../Images/user-logo-png.png';
+import userLogo from '../Images/avatar6.png';
+import Logo from '../Images/user-logo-png.png';
 import lablogo from '../Images/logo192.png';
 
 const Navbar = () => {
@@ -48,7 +49,7 @@ useEffect(() => {
           <li><NavLink to="/export">Designing</NavLink></li>
         </ul>
         <div className="user-info" onClick={toggleDropdown} ref={dropdownRef}>
-            <img src={userLogo} alt="user" style={{
+            <img src={auth ? userLogo : Logo} alt="user" style={{
             width: '40px', 
             height: '40px', 
             borderRadius: '50%',

@@ -200,10 +200,10 @@ const StatisticsPage = () => {
       <EventsNavigation />
       <h1>My Statistics</h1>
       <div className={styles.parameters}>
-        <div className="filter-container">
-          <Dropdown as={ButtonGroup} style={dropdownStyle}>
-            <Button variant="success">Filter Options</Button>
-            <Dropdown.Toggle split variant="success" id="dropdown-split-basic" />
+        <div className="filter-container" style={{}}>
+          <Dropdown as={ButtonGroup} style={{dropdownStyle, top: 'auto', marginLeft: '5%', width: '400px', marginTop: '45px'}}>
+            <Button variant="success" style={{marginTop: '0px'}}>Filter Options</Button>
+            <Dropdown.Toggle split variant="success"  style={{marginTop: '0px'}} id="dropdown-split-basic" />
 
             <Dropdown.Menu>
               <Form.Check
@@ -300,7 +300,7 @@ const StatisticsPage = () => {
         )}
       </div>
 
-      <div className="content-container">
+      <div className="content-container" style={{maxWidth: '80%', marginLeft: '10%'}}>
         {isTableFormat ? <TableFormat dataArray={tasks} /> : <DiagramFormat dataArray={tasks} />}
       </div>
     </>

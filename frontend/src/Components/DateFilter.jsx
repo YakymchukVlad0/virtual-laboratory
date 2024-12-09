@@ -91,7 +91,7 @@ const DateFilter = ({ setDateRange }) => {
 
     return (
         <div className="filter-container">
-            <button className="filter-button" onClick={toggleModal} style={{marginLeft: '500px'}}>Date Filter</button>
+            <button className="filter-button" onClick={toggleModal} style={{marginLeft: '230px'}}>Date Filter</button>
 
             {isOpen && (
                 <div className="dropdown" ref={modalRef}>

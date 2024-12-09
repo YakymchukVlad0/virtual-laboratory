@@ -29,7 +29,7 @@ const AnalyticsPage = () => {
     position: "absolute",
     zIndex: 1,
     width: "400px",
-    top: "25%",
+    top: "40%",
     left: "unset",
     marginTop: "0px",
     height: "0px",

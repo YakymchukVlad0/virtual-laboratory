@@ -9,9 +9,9 @@
 
 .dropdown {
     position: absolute;
-    margin-left:285px;
+    margin-left: -50px;
     z-index: 1;
-    width: 430px;
+    width: 550px;
     margin-top: -20px;
 }
 
