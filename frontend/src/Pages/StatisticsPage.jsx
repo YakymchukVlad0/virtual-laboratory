@@ -35,6 +35,7 @@ const StatisticsPage = () => {
     left: "unset",
     marginTop: "0px",
     height: "0px",
+    marginLeft:"0px",
   };
 
   const fetchTaskStats = async () => {
@@ -200,9 +201,9 @@ const StatisticsPage = () => {
       <h1>My Statistics</h1>
       <div className={styles.parameters}>
         <div className="filter-container" style={{}}>
-          <Dropdown as={ButtonGroup} style={{dropdownStyle, top: 'auto', marginLeft: '47%', width: '400px', marginTop: '4px'}}>
-            <Button variant="success">Filter Options</Button>
-            <Dropdown.Toggle split variant="success" id="dropdown-split-basic" />
+          <Dropdown as={ButtonGroup} style={{dropdownStyle, top: 'auto', marginLeft: '5%', width: '400px', marginTop: '45px'}}>
+            <Button variant="success" style={{marginTop: '0px'}}>Filter Options</Button>
+            <Dropdown.Toggle split variant="success"  style={{marginTop: '0px'}} id="dropdown-split-basic" />
 
             <Dropdown.Menu>
               <Form.Check
