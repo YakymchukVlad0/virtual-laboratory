@@ -35,6 +35,7 @@ const StatisticsPage = () => {
     left: "unset",
     marginTop: "0px",
     height: "0px",
+    marginLeft:"0px",
   };
 
   const fetchTaskStats = async () => {
