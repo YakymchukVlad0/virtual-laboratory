@@ -199,8 +199,8 @@ const StatisticsPage = () => {
       <EventsNavigation />
       <h1>My Statistics</h1>
       <div className={styles.parameters}>
-        <div className="filter-container">
-          <Dropdown as={ButtonGroup} style={dropdownStyle}>
+        <div className="filter-container" style={{}}>
+          <Dropdown as={ButtonGroup} style={{dropdownStyle, top: 'auto', marginLeft: '47%', width: '400px', marginTop: '4px'}}>
             <Button variant="success">Filter Options</Button>
             <Dropdown.Toggle split variant="success" id="dropdown-split-basic" />
 
@@ -299,7 +299,7 @@ const StatisticsPage = () => {
         )}
       </div>
 
-      <div className="content-container">
+      <div className="content-container" style={{maxWidth: '80%', marginLeft: '10%'}}>
         {isTableFormat ? <TableFormat dataArray={tasks} /> : <DiagramFormat dataArray={tasks} />}
       </div>
     </>
